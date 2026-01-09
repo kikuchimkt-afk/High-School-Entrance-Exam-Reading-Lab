@@ -1,9 +1,8 @@
 
 import React, { useState } from 'react';
-import { mockProblem } from '../../data/mockData';
 import QuestionList from '../Shared/QuestionList';
 
-const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode }) => {
+const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode, problem }) => {
     const [activeTab, setActiveTab] = useState('problem');
     const [highlightedSentences, setHighlightedSentences] = useState(new Set());
     const [popupInfo, setPopupInfo] = useState(null);
@@ -32,7 +31,7 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode }) => {
             } else {
                 // 2nd Click (or clicking a highlighted sentence without popup): Show Popup
                 const [pIdx, sIdx] = sentenceKey.split('-').map(Number);
-                const translation = mockProblem.sentenceTranslations?.[pIdx]?.[sIdx]
+                const translation = problem.sentenceTranslations?.[pIdx]?.[sIdx]
                     || "翻訳データが見つかりません。";
 
                 const rect = e.target.getBoundingClientRect();
@@ -54,9 +53,9 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode }) => {
         }
     };
 
-    if (!mockProblem) return <div className={styles.content}>Loading...</div>;
+    if (!problem) return <div className={styles.content}>Loading...</div>;
 
-    const { title, content, questions } = mockProblem;
+    const { title, content, questions } = problem;
 
     // Close popup when clicking elsewhere
     React.useEffect(() => {
@@ -167,9 +166,9 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode }) => {
                                     </div>
                                 );
                             })}
-                            {mockProblem.source && (
+                            {problem.source && (
                                 <div className={styles.sourceText}>
-                                    {mockProblem.source}
+                                    {problem.source}
                                 </div>
                             )}
                         </div>
@@ -181,7 +180,7 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode }) => {
                         questions={questions}
                         selectedQuestionId={selectedQuestionId}
                         onSelectQuestion={onSelectQuestion}
-                        footnotes={mockProblem.footnotes}
+                        footnotes={problem.footnotes}
                     />
                 )}
             </div>

@@ -10,7 +10,7 @@ const getOptionLabel = (index) => {
 const PrintLayout = ({ problem }) => {
     if (!problem) return null;
 
-    const { title, content, questions, source, footnotes } = problem;
+    const { title, content, questions = [], source, footnotes = [] } = problem;
 
     return (
         <div className={styles.printContainer}>

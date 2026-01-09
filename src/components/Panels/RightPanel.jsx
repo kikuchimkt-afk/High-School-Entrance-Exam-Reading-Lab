@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { mockProblem } from '../../data/mockData';
 import QuestionList from '../Shared/QuestionList';
 
-const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion }) => {
+const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion, problem }) => {
     const [activeTab, setActiveTab] = useState('explanation');
     const [level, setLevel] = useState('beginner'); // 'beginner' or 'advanced'
 
-    if (!mockProblem) return <div className={styles.content}>Loading...</div>;
+    if (!problem) return <div className={styles.content}>Loading...</div>;
 
-    const { explanations, questions } = mockProblem;
+    const { explanations, questions } = problem;
 
     // Determine content based on mode
     let currentView = activeTab;
@@ -18,7 +17,8 @@ const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion }) => {
     const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
 
     // Get common and specific explanation data
-    const rawExplanation = selectedQuestionId ? explanations[selectedQuestionId] : null;
+    // Use optional chaining carefully since explanations might be missing for new problems
+    const rawExplanation = (selectedQuestionId && explanations) ? explanations[selectedQuestionId] : null;
     const commonData = rawExplanation ? rawExplanation.common : null;
     const levelData = rawExplanation ? rawExplanation[level] : null;
     const correct = rawExplanation ? rawExplanation.correct : null;
@@ -104,7 +104,7 @@ const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion }) => {
                                 <div className={styles.explanationBody}>
                                     <div className={styles.explanationSection}>
                                         <h4>要点</h4>
-                                        <p>{levelData?.summary}</p>
+                                        <p>{levelData?.summary || '解説準備中'}</p>
                                     </div>
                                     <div className={styles.explanationSection}>
                                         <h4>詳細解説</h4>
@@ -170,7 +170,7 @@ const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion }) => {
                         questions={questions}
                         selectedQuestionId={selectedQuestionId}
                         onSelectQuestion={onSelectQuestion}
-                        footnotes={mockProblem.footnotes}
+                        footnotes={problem.footnotes}
                     />
                 )}
                 {currentView === 'create' && (

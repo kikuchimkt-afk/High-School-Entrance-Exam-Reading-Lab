@@ -1,6 +1,9 @@
-export const mockProblem = {
+const koalaProblem = {
     id: "p1",
     title: "Koalas in Australia",
+    genre: "自然科学",
+    badges: ["生物", "環境"],
+    questionCount: 6,
     source: "出典：学力テスト中3生2025年12月",
     content: `Hello, everyone. My name is Sam. I am from Australia. I came to Japan three months ago, but since then many people have asked me about koalas. So, I would like to talk about them today.
 
@@ -294,3 +297,68 @@ Protecting koalas means protecting other animals, forests, the environment, and 
         ]
     }
 };
+
+export const mockProblems = [
+    {
+        ...koalaProblem,
+        id: "p1",
+        number: "問題1",
+        title: "Koalas in Australia",
+        genre: "自然科学",
+        badges: ["生物", "環境"],
+        target: "中3", // Target audience
+        questionCount: 6,
+        source: "出典：学力テスト中3生2025年12月"
+    },
+    {
+        id: "p2",
+        number: "問題2",
+        title: "Plant Communication",
+        genre: "自然科学",
+        badges: ["植物", "科学"],
+        target: "受験生",
+        questionCount: 4,
+        source: "出典：公立高校入試予想問題",
+        content: "Placeholder content for Plant Communication...",
+        questions: []
+    },
+    {
+        id: "p3",
+        number: "問題3",
+        title: "The Mystery of the Flannan Isles",
+        genre: "歴史 / ミステリー",
+        badges: ["歴史", "ミステリー"],
+        target: "中2",
+        questionCount: 3,
+        source: "出典：英語の友 2月号",
+        content: "Placeholder content for Flannan Isles...",
+        questions: []
+    },
+    {
+        id: "p4",
+        number: "問題4",
+        title: "The Science of Empathy",
+        genre: "心理学 / 科学",
+        badges: ["心理学", "科学"],
+        target: "受験生",
+        questionCount: 4,
+        source: "出典：全国高校入試問題正解",
+        content: "Placeholder...",
+        questions: []
+    },
+    // Adding a JH1 problem for completeness
+    {
+        id: "p5",
+        number: "問題5",
+        title: "My School Life",
+        genre: "学校生活",
+        badges: ["生活"],
+        target: "中1",
+        questionCount: 3,
+        source: "出典：教科書Sunshine 1",
+        content: "Placeholder...",
+        questions: []
+    }
+];
+
+export const mockProblem = koalaProblem;
