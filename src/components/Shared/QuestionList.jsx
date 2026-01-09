@@ -33,6 +33,9 @@ const QuestionList = ({ styles, questions, selectedQuestionId, onSelectQuestion,
                                 </React.Fragment>
                             ))}
                         </p>
+                        {q.imageUrl && (
+                            <img src={q.imageUrl} alt="Question Reference" className={styles.questionImage} />
+                        )}
                         {q.options && q.options.length > 0 ? (
                             <div className={styles.optionsList}>
                                 {q.options.map((option, idx) => {
@@ -54,9 +57,11 @@ const QuestionList = ({ styles, questions, selectedQuestionId, onSelectQuestion,
                                 })}
                             </div>
                         ) : (
-                            <div className={styles.fillInBlankInfo}>
-                                <p>※ 記述または抜き出し問題</p>
-                            </div>
+                            q.answerType === 'choice' ? null : (
+                                <div className={styles.fillInBlankInfo}>
+                                    <p>※ 記述または抜き出し問題</p>
+                                </div>
+                            )
                         )}
                     </div>
                 );

@@ -4,6 +4,43 @@ import HomePage from './components/Home/HomePage';
 import PrintLayout from './components/Shared/PrintLayout';
 import { mockProblems } from './data/mockData';
 
+// Simple Error Boundary Component
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("PrintLayout Error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '40px', fontFamily: 'sans-serif' }}>
+          <h2 style={{ color: '#e03131' }}>印刷プレビューの読み込みエラー</h2>
+          <p>データの読み込み中に問題が発生しました。</p>
+          <div style={{ background: '#f8f9fa', padding: '15px', borderRadius: '4px', border: '1px solid #dee2e6', marginTop: '10px' }}>
+            <code>{this.state.error && this.state.error.toString()}</code>
+          </div>
+          <button
+            onClick={() => window.close()}
+            style={{ marginTop: '20px', padding: '8px 16px', background: '#495057', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+          >
+            閉じる
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function App() {
   const [selectedProblemId, setSelectedProblemId] = useState(null);
 
@@ -83,7 +120,9 @@ function App() {
                 }
             `}</style>
 
-        <PrintLayout problem={selectedProblem} />
+        <ErrorBoundary>
+          <PrintLayout problem={selectedProblem} />
+        </ErrorBoundary>
       </div>
     );
   }

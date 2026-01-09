@@ -8,15 +8,33 @@ const getOptionLabel = (index) => {
 };
 
 const PrintLayout = ({ problem }) => {
-    if (!problem) return null;
+    if (!problem) return <div style={{ padding: '2cm', color: 'red' }}>エラー：問題データが見つかりません (ID mismatch?)</div>;
 
     const { title, content, questions = [], source, footnotes = [] } = problem;
+
+    if (!content) return <div style={{ padding: '2cm', color: 'red' }}>エラー：問題本文 (content) がありません</div>;
+
+    // Helper to process styled text (e.g. <u> tags)
+    const renderStyledText = (text) => {
+        if (!text) return null;
+        const parts = text.split(/(<u>.*?<\/u>)/g);
+        return parts.map((part, i) => {
+            if (part.startsWith('<u>') && part.endsWith('</u>')) {
+                return (
+                    <span key={i} className={styles.underlined}>
+                        {part.replace(/<\/?u>/g, '')}
+                    </span>
+                );
+            }
+            return part;
+        });
+    };
 
     return (
         <div className={styles.printContainer}>
             {/* Header / Problem ID */}
             <div className={styles.pageHeader}>
-                <div className={styles.problemId}>問題1</div>
+                <div className={styles.problemId}>{problem.number}</div>
             </div>
 
             <div className={styles.printBody}>
@@ -24,9 +42,36 @@ const PrintLayout = ({ problem }) => {
                 <div className={styles.leftColumn}>
                     <h1 className={styles.title}>{title}</h1>
                     <div className={styles.passageContent}>
-                        {content.split(/\n+/).filter(p => p.trim().length > 0).map((paragraph, idx) => (
-                            <p key={idx}>{paragraph}</p>
-                        ))}
+                        {content.split(/\n+/).filter(p => p.trim().length > 0).map((paragraph, idx) => {
+                            // Check for Image tag
+                            const imageMatch = paragraph.match(/^\[IMAGE:(.+)\]$/);
+                            if (imageMatch) {
+                                return (
+                                    <img
+                                        key={idx}
+                                        src={imageMatch[1].trim()}
+                                        className={styles.contentImage}
+                                        alt=""
+                                    />
+                                );
+                            }
+
+                            // Check if this is a dialogue line (starts with "Name:")
+                            const speakerMatch = paragraph.match(/^([A-Za-z. ]+):\s*(.*)/s);
+
+                            if (speakerMatch) {
+                                // Dialogue: render with flex layout
+                                return (
+                                    <div key={idx} className={styles.dialogueRow}>
+                                        <span className={styles.speakerName}>{speakerMatch[1]}:</span>
+                                        <span className={styles.dialogueContent}>{renderStyledText(speakerMatch[2])}</span>
+                                    </div>
+                                );
+                            } else {
+                                // Regular paragraph
+                                return <p key={idx}>{renderStyledText(paragraph)}</p>;
+                            }
+                        })}
                     </div>
                     {/* Source citation at end of text */}
                     <div className={styles.sourceRef}>
@@ -50,10 +95,20 @@ const PrintLayout = ({ problem }) => {
                         {questions.map((q, idx) => (
                             <div key={idx} className={styles.questionItem}>
                                 <div className={styles.questionNumberBox}>
-                                    <span className={styles.questionNumber}>({q.number})</span>
+                                    <span className={styles.questionNumber}>{q.number}</span>
                                 </div>
                                 <div className={styles.questionContent}>
-                                    <p className={styles.questionText}>{q.text}</p>
+                                    <div className={styles.questionText}>
+                                        {q.text.split('\n').map((line, i) => (
+                                            <React.Fragment key={i}>
+                                                {renderStyledText(line)}
+                                                {i < q.text.split('\n').length - 1 && <br />}
+                                            </React.Fragment>
+                                        ))}
+                                    </div>
+                                    {q.imageUrl && (
+                                        <img src={q.imageUrl} className={styles.questionImage} alt="Question" />
+                                    )}
                                     {q.options && q.options.length > 0 ? (
                                         <div className={styles.optionsList}>
                                             {q.options.map((opt, oIdx) => {
@@ -75,9 +130,11 @@ const PrintLayout = ({ problem }) => {
                                             })}
                                         </div>
                                     ) : (
-                                        <div className={styles.writeInSpace}>
-                                            <div className={styles.answerLine}>__________________________</div>
-                                        </div>
+                                        q.answerType === 'choice' ? null : (
+                                            <div className={styles.writeInSpace}>
+                                                {/* No answer line needed */}
+                                            </div>
+                                        )
                                     )}
                                 </div>
                             </div>
@@ -103,7 +160,7 @@ const PrintLayout = ({ problem }) => {
 
                                     return (
                                         <span key={idx} className={styles.answerItem}>
-                                            <span className={styles.ansNum}>({q.number})</span>
+                                            <span className={styles.ansNum}>{q.number}</span>
                                             <span className={styles.ansVal}>{displayAnswer}</span>
                                         </span>
                                     );
