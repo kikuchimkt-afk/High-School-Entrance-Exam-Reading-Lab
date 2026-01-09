@@ -1,0 +1,248 @@
+@media print {
+    @page {
+        size: A4 landscape;
+        margin: 8mm;
+        /* Tighter margins */
+    }
+
+    body {
+        background: white;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+
+/* Adjust base font settings */
+.printContainer {
+    width: 275mm;
+    height: auto;
+    margin: 0 auto;
+    background: white;
+    padding: 0;
+    font-family: "Times New Roman", "Yu Mincho", "Hiragino Mincho ProN", serif;
+    color: black;
+    box-sizing: border-box;
+    overflow: visible;
+    font-size: 8.5pt;
+}
+
+.pageHeader {
+    margin-bottom: 2px;
+    /* Minimal */
+    border-bottom: 2px solid #000;
+}
+
+.problemId {
+    font-size: 9.5pt;
+    font-weight: bold;
+}
+
+.printBody {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    /* Tighter column gap */
+    margin-top: 2px;
+}
+
+/* Left Column */
+.leftColumn {
+    padding-right: 10px;
+    border-right: 1px dotted #ccc;
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 13pt;
+    font-weight: bold;
+    margin-bottom: 4px;
+    /* Tighter */
+    margin-top: 0;
+    font-family: sans-serif;
+    line-height: 1.1;
+}
+
+.passageContent {
+    flex: 1;
+    overflow: hidden;
+    /* Safety */
+}
+
+.passageContent p {
+    text-align: justify;
+    line-height: 1.35;
+    /* Tighter line height to save vertical space */
+    margin-bottom: 0.5em;
+    /* Less paragraph spacing */
+    font-size: 9pt;
+    letter-spacing: 0;
+}
+
+.sourceRef {
+    text-align: right;
+    font-size: 8pt;
+    font-style: italic;
+    margin-top: 4px;
+    color: #333;
+    padding-bottom: 0;
+}
+
+/* Right Column */
+.rightColumn {
+    padding-left: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* Distribute space if needed, but packing to top is safer */
+}
+
+/* Footnotes at top of right column */
+.footnotes {
+    margin-bottom: 6px;
+    font-size: 7.5pt;
+    border-bottom: 1px dotted #ccc;
+    padding-bottom: 4px;
+}
+
+.footnoteList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    row-gap: 2px;
+}
+
+.footnoteItem {
+    margin-right: 0;
+}
+
+.questionsHeader {
+    font-size: 9.5pt;
+    font-weight: bold;
+    margin-bottom: 4px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 2px;
+    margin-top: 0;
+}
+
+.questionsList {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* Tighter question spacing */
+}
+
+.questionItem {
+    display: flex;
+    margin-bottom: 0;
+    break-inside: avoid;
+}
+
+.questionNumberBox {
+    background-color: #f0f0f0;
+    width: 20px;
+    padding: 1px 0;
+    text-align: center;
+    font-weight: bold;
+    font-size: 8.5pt;
+    margin-right: 6px;
+    height: fit-content;
+    border-radius: 2px;
+}
+
+.questionContent {
+    flex: 1;
+}
+
+.questionText {
+    margin-top: 0;
+    font-size: 8.5pt;
+    font-weight: 600;
+    margin-bottom: 2px;
+    line-height: 1.25;
+    /* Very tight line height for questions */
+}
+
+.optionsList {
+    margin-left: 0;
+}
+
+.optionItem {
+    display: flex;
+    margin-bottom: 1px;
+    font-size: 8.5pt;
+    line-height: 1.2;
+}
+
+.writeInSpace {
+    margin-top: 5px;
+}
+
+.answerLine {
+    border-bottom: 1px solid black;
+    width: 100%;
+    height: 15px;
+}
+
+
+/* Answers Section in Right Column */
+.answersSection {
+    margin-top: 8px;
+    /* Minimal top margin */
+    padding-top: 0;
+}
+
+.answersSeparator {
+    border-top: 1px solid #000;
+    margin-bottom: 2px;
+    width: 100%;
+}
+
+.answerBox {
+    /* No border here, border is the separator */
+    padding: 2px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.answersLabel {
+    font-weight: bold;
+    margin-right: 6px;
+    font-size: 8.5pt;
+}
+
+.answersGrid {
+    display: flex;
+    flex-wrap: wrap;
+    /* Allow wrapping if too many answers */
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.answerItem {
+    display: flex;
+    gap: 3px;
+    margin-left: 5px;
+}
+
+.ansNum {
+    font-weight: bold;
+}
+
+.ansVal {
+    /* Normal weight */
+}
+
+/* Footer Section - Almost gone, handled by layout above essentially */
+.pageFooter {
+    display: none;
+    /* We moved everything inside columns mostly */
+}
+
+.sourceText {
+    color: #555;
+    font-size: 8pt;
+}

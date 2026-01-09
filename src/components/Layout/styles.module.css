@@ -1,5 +1,6 @@
 /* Layout Structure */
 .container {
+  /* Kept for backwards compatibility if needed, but we used appContainer in JS */
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -7,6 +8,44 @@
   overflow: hidden;
   background-color: #f8f9fa;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.appContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: #f8f9fa;
+}
+
+.printArea {
+  display: none;
+}
+
+@media print {
+  .appContainer {
+    display: none !important;
+  }
+
+  .printArea {
+    display: block !important;
+  }
+}
+
+.printBtn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 12px;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.printBtn:hover {
+  background: #e9ecef;
 }
 
 .header {
@@ -18,6 +57,12 @@
   justify-content: space-between;
   padding: 0 24px;
   flex-shrink: 0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .headerLeft h1 {
