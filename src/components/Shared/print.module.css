@@ -187,11 +187,14 @@
 
 .optionsList {
     margin-left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
 }
 
 .optionItem {
-    display: flex;
-    margin-bottom: 1px;
+    display: inline-flex;
+    margin-bottom: 0;
     font-size: 8.5pt;
     line-height: 1.2;
 }

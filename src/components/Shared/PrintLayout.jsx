@@ -14,6 +14,34 @@ const PrintLayout = ({ problem }) => {
 
     if (!content) return <div style={{ padding: '2cm', color: 'red' }}>エラー：問題本文 (content) がありません</div>;
 
+    // Dynamic sizing calculation based on content and question count
+    const paragraphCount = content.split(/\n+/).filter(p => p.trim().length > 0).length;
+    const totalQuestions = questions.length;
+    const contentLength = content.length;
+
+    // Calculate optimal font size: more questions = larger passage font to balance columns
+    // Base: 9pt, adjust up to 11pt based on question density
+    let passageFontSize = 9;
+    let passageLineHeight = 1.4;
+
+    if (totalQuestions >= 6 && contentLength < 2000) {
+        passageFontSize = 10;
+        passageLineHeight = 1.55;
+    }
+    if (totalQuestions >= 5 && contentLength < 1500) {
+        passageFontSize = 10.5;
+        passageLineHeight = 1.65;
+    }
+    if (totalQuestions >= 6 && contentLength < 1200) {
+        passageFontSize = 11;
+        passageLineHeight = 1.75;
+    }
+
+    const passageStyle = {
+        fontSize: `${passageFontSize}pt`,
+        lineHeight: passageLineHeight
+    };
+
     // Helper to process styled text (e.g. <u> tags)
     const renderStyledText = (text) => {
         if (!text) return null;
@@ -41,7 +69,7 @@ const PrintLayout = ({ problem }) => {
                 {/* Left Column: Passage */}
                 <div className={styles.leftColumn}>
                     <h1 className={styles.title}>{title}</h1>
-                    <div className={styles.passageContent}>
+                    <div className={styles.passageContent} style={passageStyle}>
                         {content.split(/\n+/).filter(p => p.trim().length > 0).map((paragraph, idx) => {
                             // Check for Image tag
                             const imageMatch = paragraph.match(/^\[IMAGE:(.+)\]$/);
@@ -56,20 +84,68 @@ const PrintLayout = ({ problem }) => {
                                 );
                             }
 
+                            // Extract inline markdown image for floating right
+                            // Pattern: ![alt](src)
+                            const inlineImageRegex = /!\[(.*?)\]\((.*?)\)/;
+                            const inlineMatch = paragraph.match(inlineImageRegex);
+                            let floatImageInfo = null;
+                            let processingParagraph = paragraph;
+
+                            if (inlineMatch) {
+                                floatImageInfo = {
+                                    alt: inlineMatch[1],
+                                    src: inlineMatch[2]
+                                };
+                                // Remove the image tag from the text to be processed
+                                processingParagraph = processingParagraph.replace(inlineImageRegex, '').trim();
+                            }
+
                             // Check if this is a dialogue line (starts with "Name:")
-                            const speakerMatch = paragraph.match(/^([A-Za-z. ]+):\s*(.*)/s);
+                            const speakerMatch = processingParagraph.match(/^([A-Za-z. ]+):\s*(.*)/s);
 
                             if (speakerMatch) {
                                 // Dialogue: render with flex layout
                                 return (
                                     <div key={idx} className={styles.dialogueRow}>
                                         <span className={styles.speakerName}>{speakerMatch[1]}:</span>
-                                        <span className={styles.dialogueContent}>{renderStyledText(speakerMatch[2])}</span>
+                                        <span className={styles.dialogueContent}>
+                                            {floatImageInfo && (
+                                                <img
+                                                    src={floatImageInfo.src}
+                                                    alt={floatImageInfo.alt}
+                                                    style={{
+                                                        float: 'right',
+                                                        maxWidth: '30%',
+                                                        marginLeft: '12px',
+                                                        marginBottom: '8px',
+                                                        border: '1px solid #eee'
+                                                    }}
+                                                />
+                                            )}
+                                            {renderStyledText(speakerMatch[2])}
+                                        </span>
                                     </div>
                                 );
                             } else {
                                 // Regular paragraph
-                                return <p key={idx}>{renderStyledText(paragraph)}</p>;
+                                return (
+                                    <p key={idx}>
+                                        {floatImageInfo && (
+                                            <img
+                                                src={floatImageInfo.src}
+                                                alt={floatImageInfo.alt}
+                                                style={{
+                                                    float: 'right',
+                                                    maxWidth: '30%',
+                                                    marginLeft: '12px',
+                                                    marginBottom: '8px',
+                                                    border: '1px solid #eee'
+                                                }}
+                                            />
+                                        )}
+                                        {renderStyledText(processingParagraph)}
+                                    </p>
+                                );
                             }
                         })}
                     </div>
@@ -77,11 +153,7 @@ const PrintLayout = ({ problem }) => {
                     <div className={styles.sourceRef}>
                         {source && <span>{source}</span>}
                     </div>
-                </div>
-
-                {/* Right Column: Questions */}
-                <div className={styles.rightColumn}>
-                    {/* Footnotes at top of right column */}
+                    {/* Footnotes at bottom of left column */}
                     <div className={styles.footnotes}>
                         <div className={styles.footnoteList}>
                             {footnotes.map((note, index) => (
@@ -89,7 +161,10 @@ const PrintLayout = ({ problem }) => {
                             ))}
                         </div>
                     </div>
+                </div>
 
+                {/* Right Column: Questions */}
+                <div className={styles.rightColumn}>
                     <h3 className={styles.questionsHeader}>Questions</h3>
                     <div className={styles.questionsList}>
                         {questions.map((q, idx) => (
@@ -99,12 +174,48 @@ const PrintLayout = ({ problem }) => {
                                 </div>
                                 <div className={styles.questionContent}>
                                     <div className={styles.questionText}>
-                                        {q.text.split('\n').map((line, i) => (
-                                            <React.Fragment key={i}>
-                                                {renderStyledText(line)}
-                                                {i < q.text.split('\n').length - 1 && <br />}
-                                            </React.Fragment>
-                                        ))}
+                                        {q.text.split('\n').map((line, i) => {
+                                            const imageMatch = line.match(/!\[(.*?)\]\((.*?)\)/);
+                                            if (imageMatch) {
+                                                // Parse for scale in alt: "AltText|1.2"
+                                                let altText = imageMatch[1];
+                                                let scale = 1.0;
+                                                if (altText.includes('|')) {
+                                                    const parts = altText.split('|');
+                                                    altText = parts[0];
+                                                    const scaleStr = parts[1];
+                                                    if (!isNaN(parseFloat(scaleStr))) {
+                                                        scale = parseFloat(scaleStr);
+                                                    }
+                                                }
+
+                                                return (
+                                                    <React.Fragment key={i}>
+                                                        <img
+                                                            src={imageMatch[2]}
+                                                            alt={altText}
+                                                            className={styles.questionInnerImage}
+                                                            style={{
+                                                                maxWidth: '80%',
+                                                                maxHeight: '350px',
+                                                                objectFit: 'contain',
+                                                                marginTop: '8px',
+                                                                marginBottom: '8px',
+                                                                transform: `scale(${scale})`,
+                                                                transformOrigin: 'top left'
+                                                            }}
+                                                        />
+                                                        <br />
+                                                    </React.Fragment>
+                                                );
+                                            }
+                                            return (
+                                                <React.Fragment key={i}>
+                                                    {renderStyledText(line)}
+                                                    {i < q.text.split('\n').length - 1 && <br />}
+                                                </React.Fragment>
+                                            );
+                                        })}
                                     </div>
                                     {q.imageUrl && (
                                         <img src={q.imageUrl} className={styles.questionImage} alt="Question" />

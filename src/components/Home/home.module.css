@@ -18,6 +18,7 @@
     letter-spacing: 0.05em;
     background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -27,24 +28,141 @@
     font-size: 0.9rem;
 }
 
-.gradeTabs {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-bottom: 60px;
-    flex-wrap: wrap;
+/* Filter Panels (3 Columns) */
+.filterPanels {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto 40px;
     padding: 0 20px;
 }
 
-.gradeTab {
-    background: transparent;
-    border: 1px solid #475569;
+.filterColumn {
+    background: #27272a;
+    border: 1px solid #3f3f46;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.columnHeader {
+    font-size: 0.9rem;
+    font-weight: 700;
     color: #94a3b8;
-    padding: 8px 20px;
+    text-align: center;
+    border-bottom: 1px solid #3f3f46;
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+}
+
+.tagList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.tagButton {
+    background: transparent;
+    border: 1px solid #52525b;
+    color: #a1a1aa;
+    font-size: 0.8rem;
+    padding: 6px 12px;
     border-radius: 20px;
     cursor: pointer;
-    font-size: 0.9rem;
     transition: all 0.2s;
+}
+
+.tagButton:hover {
+    border-color: #a1a1aa;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tagButton.active {
+    background: #f59e0b;
+    border-color: #f59e0b;
+    color: #fff;
+}
+
+/* New Search Box (Input with Tags) */
+.searchBarContainer {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    padding: 0 20px;
+}
+
+.searchBox {
+    width: 100%;
+    max-width: 800px;
+    min-height: 50px;
+    background: #27272a;
+    border: 1px solid #475569;
+    border-radius: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 6px 16px;
+    gap: 8px;
+    transition: all 0.2s;
+}
+
+.searchBox:focus-within {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+.searchTag {
+    background: #3f3f46;
+    color: #fff;
+    font-size: 0.85rem;
+    padding: 4px 10px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #52525b;
+}
+
+.tagRemove {
+    cursor: pointer;
+    font-weight: bold;
+    color: #a1a1aa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.tagRemove:hover {
+    color: #fff;
+    background: #ef4444;
+}
+
+.searchInput {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    flex-grow: 1;
+    min-width: 150px;
+    padding: 8px 0;
+}
+
+.searchInput:focus {
+    border-color: #f59e0b;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
 }
 
 .gradeTab:hover {
@@ -117,11 +235,39 @@
 }
 
 .targetBadge {
-    border: 1px solid #10b981;
-    color: #10b981;
+    border: 1px solid #71717a;
+    color: #a1a1aa;
     font-size: 0.75rem;
     padding: 2px 8px;
     border-radius: 4px;
+}
+
+.grade1 {
+    border-color: #f472b6;
+    /* Pink-400 */
+    color: #f472b6;
+    background: rgba(244, 114, 182, 0.1);
+}
+
+.grade2 {
+    border-color: #60a5fa;
+    /* Blue-400 */
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.1);
+}
+
+.grade3 {
+    border-color: #34d399;
+    /* Emerald-400 */
+    color: #34d399;
+    background: rgba(52, 211, 153, 0.1);
+}
+
+.gradeExaminee {
+    border-color: #ffd700;
+    /* Gold */
+    color: #ffd700;
+    background: rgba(255, 215, 0, 0.1);
 }
 
 .problemNumber {
@@ -150,6 +296,23 @@
     font-style: italic;
     color: #e4e4e7;
 }
+
+.badgesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.grammarBadge {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid #3f3f46;
+}
+
 
 .cardFooter {
     margin-top: auto;

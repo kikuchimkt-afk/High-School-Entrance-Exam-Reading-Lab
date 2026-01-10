@@ -43,6 +43,7 @@ class ErrorBoundary extends React.Component {
 
 function App() {
   const [selectedProblemId, setSelectedProblemId] = useState(null);
+  const [homeCategory, setHomeCategory] = useState('中3');
 
   // Check for URL params on mount
   useEffect(() => {
@@ -130,7 +131,11 @@ function App() {
   return (
     <>
       {!selectedProblemId ? (
-        <HomePage onSelectProblem={handleSelectProblem} />
+        <HomePage
+          onSelectProblem={handleSelectProblem}
+          selectedGrade={homeCategory}
+          onSelectGrade={setHomeCategory}
+        />
       ) : (
         <MainLayout
           problem={selectedProblem}

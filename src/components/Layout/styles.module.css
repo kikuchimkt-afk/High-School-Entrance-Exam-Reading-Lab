@@ -341,9 +341,9 @@
 }
 
 .selectedCard {
-  border-color: #228be6;
-  background-color: #f7f9fc;
-  box-shadow: 0 0 0 4px rgba(34, 139, 230, 0.1);
+  border-color: #40c057;
+  background-color: #f4fce3;
+  box-shadow: 0 0 0 4px rgba(64, 192, 87, 0.15);
 }
 
 .questionHeader {
@@ -359,6 +359,12 @@
   padding: 4px 12px;
   border-radius: 16px;
   font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.selectedCard .questionNumber {
+  background: #d3f9d8;
+  color: #2b8a3e;
 }
 
 .questionText {
@@ -837,6 +843,11 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+.selectedReviewItem {
+  border: 4px solid #40c057 !important;
+  box-shadow: 0 4px 12px rgba(64, 192, 87, 0.2);
+}
+
 .reviewQuestionHeader {
   padding: 16px;
   cursor: pointer;
@@ -852,8 +863,8 @@
 }
 
 .activeQuestion {
-  background: #f1f3f5;
-  border-bottom: 1px solid #e9ecef;
+  background: #f4fce3;
+  border-bottom: 1px solid #d3f9d8;
 }
 
 .qBadge {

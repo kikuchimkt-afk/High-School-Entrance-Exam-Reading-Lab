@@ -61,7 +61,7 @@ const MainLayout = ({ problem, onBack }) => {
                                 className={`${styles.modeBtn} ${mode === 'learning' ? styles.activeModeBtn : ''}`}
                                 onClick={() => setMode('learning')}
                             >
-                                学習モード
+                                自由学習
                             </button>
                             <button
                                 className={`${styles.modeBtn} ${mode === 'test' ? styles.activeModeBtn : ''}`}

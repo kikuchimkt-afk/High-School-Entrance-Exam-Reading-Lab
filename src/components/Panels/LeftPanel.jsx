@@ -193,25 +193,41 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode, problem
                                     );
                                 }
 
+                                // Extract inline markdown image for floating right
+                                // Pattern: ![alt](src)
+                                const inlineImageRegex = /!\[(.*?)\]\((.*?)\)/;
+                                const inlineMatch = paragraph.match(inlineImageRegex);
+                                let floatImageInfo = null;
+                                let processingParagraph = paragraph;
+
+                                if (inlineMatch) {
+                                    floatImageInfo = {
+                                        alt: inlineMatch[1],
+                                        src: inlineMatch[2]
+                                    };
+                                    // Remove the image tag from the text to be processed
+                                    processingParagraph = processingParagraph.replace(inlineImageRegex, '').trim();
+                                }
+
                                 // Find if this paragraph is related to the selected question
                                 const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
-                                const isRelated = selectedQuestion?.relatedParagraphs?.includes(pIdx);
+                                const isRelated = problem.genre !== '対話' && selectedQuestion?.relatedParagraphs?.includes(pIdx);
 
                                 // DIALOGUE DETECTION
                                 // Check if paragraph starts with "Name:" pattern (e.g. "Hana:", "Mr. Green:")
-                                const speakerMatch = paragraph.match(/^([A-Za-z. ]+):/);
+                                const speakerMatch = processingParagraph.match(/^([A-Za-z. ]+):/);
                                 const isDialogue = !!speakerMatch;
 
                                 // Split paragraph into sentences, being careful not to split on abbreviations or inside <u> tags
                                 // First, temporarily replace <u>...</u> content and abbreviations to protect them
-                                let protectedPara = paragraph;
+                                let protectedPara = processingParagraph;
                                 const placeholders = [];
 
                                 // Protect underline tags: SKIPPED to allow splitting inside.
 
 
                                 // Protect common abbreviations (Mr., Mrs., Ms., Dr., U.S., U.K., etc.)
-                                const abbreviations = ['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Prof.', 'U.S.', 'U.K.', 'e.g.', 'i.e.'];
+                                const abbreviations = ['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Prof.', 'U.S.', 'U.K.', 'e.g.', 'i.e.', 'a.m.', 'p.m.', 'A.M.', 'P.M.'];
                                 abbreviations.forEach(abbr => {
                                     const regex = new RegExp(abbr.replace(/\./g, '\\.'), 'g');
                                     protectedPara = protectedPara.replace(regex, (match) => {
@@ -224,7 +240,7 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode, problem
                                 // Ensure sentence split happens even if sentence ends with </u> by adding a space
                                 protectedPara = protectedPara.replace(/([.!?])<\/u>/g, '$1 </u>');
 
-                                let sentences = protectedPara.match(/[^.!?]+[.!?]+"?(\s+|$)/g) || [protectedPara];
+                                let sentences = protectedPara.match(/[^.!?]+[.!?]+['"]*(\s+|$)/g) || [protectedPara];
 
                                 // Balance <u> tags across sentences
                                 let isUnderlineOpen = false;
@@ -300,6 +316,20 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode, problem
                                                     {speakerMatch ? speakerMatch[1] + ':' : ''}
                                                 </div>
                                                 <div className={styles.dialogueContent}>
+                                                    {floatImageInfo && (
+                                                        <img
+                                                            src={floatImageInfo.src}
+                                                            alt={floatImageInfo.alt}
+                                                            style={{
+                                                                float: 'right',
+                                                                maxWidth: '220px',
+                                                                marginLeft: '16px',
+                                                                marginBottom: '8px',
+                                                                border: '1px solid #eee',
+                                                                borderRadius: '4px'
+                                                            }}
+                                                        />
+                                                    )}
                                                     {sentences.map((sentence, sIdx) => {
                                                         const sentenceKey = `${pIdx}-${sIdx}`;
                                                         const isHighlighted = mode !== 'test' && highlightedSentences.has(sentenceKey);
@@ -328,7 +358,7 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode, problem
                                                                 key={sIdx}
                                                                 className={`${styles.sentence} ${isHighlighted ? styles.highlightedSentence : ''} ${isRelated ? styles.relatedSentence : ''}`}
                                                                 onClick={(e) => mode !== 'test' && handleSentenceClick(e, sentence, sentenceKey)}
-                                                                style={{ cursor: mode === 'test' ? 'default' : 'pointer' }}
+                                                                style={{ cursor: mode === 'test' ? 'default' : 'pointer', whiteSpace: 'pre-wrap' }}
                                                             >
                                                                 {parseRichText(textForSentence)}
                                                             </span>
@@ -339,6 +369,20 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode, problem
                                         ) : (
                                             // Regular paragraph
                                             <p>
+                                                {floatImageInfo && (
+                                                    <img
+                                                        src={floatImageInfo.src}
+                                                        alt={floatImageInfo.alt}
+                                                        style={{
+                                                            float: 'right',
+                                                            maxWidth: '220px',
+                                                            marginLeft: '16px',
+                                                            marginBottom: '8px',
+                                                            border: '1px solid #eee',
+                                                            borderRadius: '4px'
+                                                        }}
+                                                    />
+                                                )}
                                                 {sentences.map((sentence, sIdx) => {
                                                     const sentenceKey = `${pIdx}-${sIdx}`;
                                                     const isHighlighted = mode !== 'test' && highlightedSentences.has(sentenceKey);
@@ -360,7 +404,7 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode, problem
                                                             key={sIdx}
                                                             className={`${styles.sentence} ${isHighlighted ? styles.highlightedSentence : ''} ${isRelated ? styles.relatedSentence : ''}`}
                                                             onClick={(e) => mode !== 'test' && handleSentenceClick(e, sentence, sentenceKey)}
-                                                            style={{ cursor: mode === 'test' ? 'default' : 'pointer' }}
+                                                            style={{ cursor: mode === 'test' ? 'default' : 'pointer', whiteSpace: 'pre-wrap' }}
                                                         >
                                                             {parseRichText(sentence)}
                                                         </span>

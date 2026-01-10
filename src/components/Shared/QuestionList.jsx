@@ -25,13 +25,48 @@ const QuestionList = ({ styles, questions, selectedQuestionId, onSelectQuestion,
                         <div className={styles.questionHeader}>
                             <span className={styles.questionNumber}>Q{q.number}</span>
                         </div>
-                        <p className={styles.questionText}>
-                            {q.text.split('\n').map((line, i) => (
-                                <React.Fragment key={i}>
-                                    {line}
-                                    <br />
-                                </React.Fragment>
-                            ))}
+                        <p className={styles.questionText} style={{ whiteSpace: 'pre-wrap' }}>
+                            {q.text.split('\n').map((line, i) => {
+                                const imageMatch = line.match(/!\[(.*?)\]\((.*?)\)/);
+                                if (imageMatch) {
+                                    // Parse for scale in alt: "AltText|1.2"
+                                    let altText = imageMatch[1];
+                                    let scale = 1.0;
+                                    if (altText.includes('|')) {
+                                        const parts = altText.split('|');
+                                        altText = parts[0];
+                                        const scaleStr = parts[1];
+                                        if (!isNaN(parseFloat(scaleStr))) {
+                                            scale = parseFloat(scaleStr);
+                                        }
+                                    }
+
+                                    return (
+                                        <React.Fragment key={i}>
+                                            <img
+                                                src={imageMatch[2]}
+                                                alt={altText}
+                                                className={styles.questionInnerImage}
+                                                style={{
+                                                    maxWidth: '100%',
+                                                    marginTop: '8px',
+                                                    marginBottom: '8px',
+                                                    borderRadius: '4px',
+                                                    transform: `scale(${scale})`,
+                                                    transformOrigin: 'top left'
+                                                }}
+                                            />
+                                            <br />
+                                        </React.Fragment>
+                                    );
+                                }
+                                return (
+                                    <React.Fragment key={i}>
+                                        {line}
+                                        <br />
+                                    </React.Fragment>
+                                );
+                            })}
                         </p>
                         {q.imageUrl && (
                             <img src={q.imageUrl} alt="Question Reference" className={styles.questionImage} />
