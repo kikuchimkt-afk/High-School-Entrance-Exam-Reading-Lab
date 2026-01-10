@@ -1,4 +1,4 @@
-import tokushima_2026_mock_q6_cleaning from './tokushima_2026_mock_q7_cleaning.js';
+import tokushima_2026_mock_q7_cleaning from './tokushima_2026_mock_q7_cleaning.js';
 import tokushima_mock_d5_aurora from './tokushima_mock_d5_aurora.js';
 import tokushima_mock_2025_yamaguchi_remix from './tokushima_mock_2025_yamaguchi_remix.js';
 
@@ -1165,4 +1165,5 @@ Sometimes AI Suitcase can't ( ) the ( ) of a traffic light when the sunlight is 
     }
 };
 
-export const grade3Problems = [weddingRegistryProblem, newYearsResolutionProblem, rinsSpeechProblem, tokushima_2026_mock_q6_cleaning, tokushima_mock_d5_aurora, tokushima_mock_2025_yamaguchi_remix];
+export const grade3Problems = [weddingRegistryProblem, newYearsResolutionProblem, rinsSpeechProblem, tokushima_2026_mock_q7_cleaning,
+    tokushima_mock_d5_aurora, tokushima_mock_2025_yamaguchi_remix];
