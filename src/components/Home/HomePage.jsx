@@ -7,6 +7,7 @@ const HomePage = ({ onSelectProblem }) => {
     // searchTags: Array of { type: 'GRADE' | 'GRAMMAR' | 'TOPIC' | 'TEST' | 'GENRE', value: '...' }
     const [searchTags, setSearchTags] = useState([]);
     const [textInput, setTextInput] = useState('');
+    const [searchMode, setSearchMode] = useState('OR'); // 'OR' | 'AND'
 
     // 2. Pre-calculated Filter Options
     // (A) Grade Options
@@ -19,7 +20,7 @@ const HomePage = ({ onSelectProblem }) => {
     ];
 
     // (B) Test Keywords (Hardcoded)
-    const testKeywords = ["学力テスト", "基礎学", "定期テスト", "入試", "実力テスト"];
+    const testKeywords = ["学力テスト", "基礎学", "定期テスト", "入試", "実力テスト", "入試問題", "オリジナル入試問題", "徳島県模試"];
 
     // (C) Grammar Whitelist (For Middle Column)
     // Anything NOT in this list and NOT a test keyword/grade will go to "Topics"
@@ -69,33 +70,53 @@ const HomePage = ({ onSelectProblem }) => {
             return;
         }
 
-        // Avoid duplicates
-        if (searchTags.some(t => t.type === type && t.value === value)) return;
-
-        setSearchTags(prev => [...prev, { type, value }]);
+        // Toggle logic: if exists, remove it; otherwise, add it
+        if (searchTags.some(t => t.type === type && t.value === value)) {
+            setSearchTags(prev => prev.filter(t => !(t.type === type && t.value === value)));
+        } else {
+            setSearchTags(prev => [...prev, { type, value }]);
+        }
     };
 
     const removeTag = (tagIdx) => {
         setSearchTags(prev => prev.filter((_, idx) => idx !== tagIdx));
     };
 
+    const isTagActive = (type, value) => {
+        return searchTags.some(t => t.type === type && t.value === value);
+    };
+
     // 4. Filtering Logic
     const filteredProblems = mockProblems.filter(p => {
-        const matchTags = searchTags.every(tag => {
-            if (tag.type === 'GRADE') {
-                return p.target === tag.value || p.badges?.includes(tag.value);
+        // If no tags selected, matchTags is true (pass through)
+        // Logic depends on searchMode:
+        // OR: At least one tag must match (some)
+        // AND: All tags must match (every)
+
+        let matchTags = true;
+        if (searchTags.length > 0) {
+            const checkTag = (tag) => {
+                if (tag.type === 'GRADE') {
+                    return p.target === tag.value || p.badges?.includes(tag.value);
+                }
+                if (tag.type === 'GRAMMAR' || tag.type === 'TOPIC') {
+                    return p.badges?.includes(tag.value);
+                }
+                if (tag.type === 'TEST') {
+                    return (p.source || '').includes(tag.value) || p.badges?.includes(tag.value);
+                }
+                if (tag.type === 'GENRE') {
+                    return p.genre === tag.value;
+                }
+                return false;
+            };
+
+            if (searchMode === 'OR') {
+                matchTags = searchTags.some(checkTag);
+            } else {
+                matchTags = searchTags.every(checkTag);
             }
-            if (tag.type === 'GRAMMAR' || tag.type === 'TOPIC') {
-                return p.badges?.includes(tag.value);
-            }
-            if (tag.type === 'TEST') {
-                return (p.source || '').includes(tag.value) || p.badges?.includes(tag.value);
-            }
-            if (tag.type === 'GENRE') {
-                return p.genre === tag.value;
-            }
-            return true;
-        });
+        }
 
         if (!matchTags) return false;
 
@@ -116,7 +137,29 @@ const HomePage = ({ onSelectProblem }) => {
             </header>
 
             {/* Search Bar */}
-            <div className={styles.searchBarContainer}>
+            <div className={styles.searchBarContainer} style={{ flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '5px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '5px' }}>
+                        <input
+                            type="radio"
+                            name="searchMode"
+                            value="OR"
+                            checked={searchMode === 'OR'}
+                            onChange={(e) => setSearchMode(e.target.value)}
+                        />
+                        <span style={{ fontSize: '0.9rem', color: searchMode === 'OR' ? '#fff' : '#94a3b8' }}>OR検索 (どれかを含む)</span>
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '5px' }}>
+                        <input
+                            type="radio"
+                            name="searchMode"
+                            value="AND"
+                            checked={searchMode === 'AND'}
+                            onChange={(e) => setSearchMode(e.target.value)}
+                        />
+                        <span style={{ fontSize: '0.9rem', color: searchMode === 'AND' ? '#fff' : '#94a3b8' }}>AND検索 (すべて含む)</span>
+                    </label>
+                </div>
                 <div className={styles.searchBox}>
                     {searchTags.map((tag, idx) => (
                         <div key={idx} className={styles.searchTag}>
@@ -143,7 +186,7 @@ const HomePage = ({ onSelectProblem }) => {
                         {gradeOptions.map((opt) => (
                             <button
                                 key={opt.value}
-                                className={styles.tagButton}
+                                className={`${styles.tagButton} ${isTagActive(opt.type, opt.value) ? styles.active : ''}`}
                                 onClick={() => addTag(opt.type, opt.value)}
                             >
                                 {opt.label}
@@ -158,7 +201,7 @@ const HomePage = ({ onSelectProblem }) => {
                             {topicOptions.length > 0 ? topicOptions.map((topic) => (
                                 <button
                                     key={topic}
-                                    className={styles.tagButton}
+                                    className={`${styles.tagButton} ${isTagActive('TOPIC', topic) ? styles.active : ''}`}
                                     onClick={() => addTag('TOPIC', topic)}
                                 >
                                     {topic}
@@ -177,7 +220,7 @@ const HomePage = ({ onSelectProblem }) => {
                         {grammarOptions.length > 0 ? grammarOptions.map((badge) => (
                             <button
                                 key={badge}
-                                className={styles.tagButton}
+                                className={`${styles.tagButton} ${isTagActive('GRAMMAR', badge) ? styles.active : ''}`}
                                 onClick={() => addTag('GRAMMAR', badge)}
                             >
                                 {badge}
@@ -201,7 +244,7 @@ const HomePage = ({ onSelectProblem }) => {
                         {testOptions.map((test) => (
                             <button
                                 key={test}
-                                className={styles.tagButton}
+                                className={`${styles.tagButton} ${isTagActive('TEST', test) ? styles.active : ''}`}
                                 onClick={() => addTag('TEST', test)}
                             >
                                 {test}
@@ -216,7 +259,7 @@ const HomePage = ({ onSelectProblem }) => {
                             {genreOptions.map((genre) => (
                                 <button
                                     key={genre}
-                                    className={styles.tagButton}
+                                    className={`${styles.tagButton} ${isTagActive('GENRE', genre) ? styles.active : ''}`}
                                     onClick={() => addTag('GENRE', genre)}
                                 >
                                     {genre}
@@ -267,7 +310,7 @@ const HomePage = ({ onSelectProblem }) => {
                                             className={styles.actionBtnOutline}
                                             onClick={() => onSelectProblem(problem.id)}
                                         >
-                                            <span className={styles.icon}>📄</span> 指導書
+                                            <span className={styles.icon}>📄</span> 問題閲覧
                                         </button>
                                         <button
                                             className={styles.actionBtnOutline}

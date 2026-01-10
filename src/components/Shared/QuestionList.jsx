@@ -14,7 +14,7 @@ const QuestionList = ({ styles, questions, selectedQuestionId, onSelectQuestion,
                 </div>
             )}
             {questions.map((q) => {
-                const labels = ['ア', 'イ', 'ウ', 'エ', 'オ'];
+                const labels = ['ア', 'イ', 'ウ', 'エ', 'オ', 'カ'];
 
                 return (
                     <div
@@ -68,6 +68,14 @@ const QuestionList = ({ styles, questions, selectedQuestionId, onSelectQuestion,
                                 );
                             })}
                         </p>
+                        {q.diagram_text && (
+                            <div className={styles.memoContainer}>
+                                <div className={styles.memoHeader}>
+                                    <span>📝</span> SUMMARY MEMO
+                                </div>
+                                <p className={styles.memoContent}>{q.diagram_text}</p>
+                            </div>
+                        )}
                         {q.imageUrl && (
                             <img src={q.imageUrl} alt="Question Reference" className={styles.questionImage} />
                         )}

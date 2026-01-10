@@ -1,6 +1,22 @@
 import React, { useState } from 'react';
 import QuestionList from '../Shared/QuestionList';
 
+// Helper to parse simple markdown (**bold**, *italic*)
+const parseSimpleMarkdown = (txt) => {
+    if (!txt) return null;
+    // Split by **text** and *text*
+    const parts = txt.split(/(\*\*.*?\*\*|\*.*?\*)/g);
+    return parts.map((part, i) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+            return <strong key={i}>{part.slice(2, -2)}</strong>;
+        }
+        if (part.startsWith('*') && part.endsWith('*')) {
+            return <em key={i}>{part.slice(1, -1)}</em>;
+        }
+        return part;
+    });
+};
+
 // Modal Component for Summary
 const SummaryModal = ({ problem, onClose }) => {
     if (!problem) return null;
@@ -43,7 +59,7 @@ const SummaryModal = ({ problem, onClose }) => {
                         日本語での本文要約
                     </h3>
                     <p style={{ lineHeight: '1.6', fontSize: '0.95rem', color: '#444', whiteSpace: 'pre-wrap' }}>
-                        {problem.summary?.japanese || "要約データは準備中です。"}
+                        {problem.summary?.japanese ? parseSimpleMarkdown(problem.summary.japanese) : "要約データは準備中です。"}
                     </p>
                 </div>
 
@@ -55,7 +71,7 @@ const SummaryModal = ({ problem, onClose }) => {
                         {problem.summary?.notes ? (
                             <ul style={{ paddingLeft: '20px', margin: 0 }}>
                                 {problem.summary.notes.map((note, idx) => (
-                                    <li key={idx} style={{ marginBottom: '4px' }}>{note}</li>
+                                    <li key={idx} style={{ marginBottom: '4px' }}>{parseSimpleMarkdown(note)}</li>
                                 ))}
                             </ul>
                         ) : (
@@ -87,6 +103,7 @@ const SummaryModal = ({ problem, onClose }) => {
 
 // Helper Component for Explanation Content
 const ExplanationContent = ({ levelData, commonData, level, styles, setRelatedHighlights }) => {
+
     // Helper to parse reference links in detail text
     const renderDetailWithRefs = (text) => {
         if (!text) return null;
@@ -106,7 +123,7 @@ const ExplanationContent = ({ levelData, commonData, level, styles, setRelatedHi
                         onClick={() => setRelatedHighlights(new Set(targets))}
                         title="Click to highlight in text"
                     >
-                        {content}
+                        {parseSimpleMarkdown(content)}
                     </span>
                 );
             }
@@ -118,7 +135,7 @@ const ExplanationContent = ({ levelData, commonData, level, styles, setRelatedHi
                 const content = spanMatch[2];
                 return (
                     <span key={i} style={{ color, fontWeight: 'bold' }}>
-                        {content}
+                        {parseSimpleMarkdown(content)}
                     </span>
                 );
             }
@@ -126,7 +143,7 @@ const ExplanationContent = ({ levelData, commonData, level, styles, setRelatedHi
             // Handle <b> and <strong> tags
             if (part.startsWith('<b>') || part.startsWith('<strong>')) {
                 const content = part.replace(/<\/?(b|strong)>/g, '');
-                return <strong key={i}>{content}</strong>;
+                return <strong key={i}>{parseSimpleMarkdown(content)}</strong>;
             }
 
             // Handle <br> tags
@@ -134,8 +151,8 @@ const ExplanationContent = ({ levelData, commonData, level, styles, setRelatedHi
                 return <br key={i} />;
             }
 
-            // Return plain text
-            return part;
+            // Return plain text with simple markdown support
+            return <React.Fragment key={i}>{parseSimpleMarkdown(part)}</React.Fragment>;
         });
     };
 
@@ -147,7 +164,7 @@ const ExplanationContent = ({ levelData, commonData, level, styles, setRelatedHi
             </div>
             <div className={styles.explanationSection}>
                 <h4>詳細解説</h4>
-                <p style={{ whiteSpace: 'pre-wrap' }}>{renderDetailWithRefs(levelData?.detail)}</p>
+                <div style={{ whiteSpace: 'pre-wrap' }}>{renderDetailWithRefs(levelData?.detail)}</div>
             </div>
             {levelData?.keywords && (
                 <div className={styles.explanationSection}>
@@ -213,7 +230,7 @@ const ExplanationContent = ({ levelData, commonData, level, styles, setRelatedHi
 const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion, problem, setRelatedHighlights, relatedHighlights, level }) => {
     const [activeTab, setActiveTab] = useState('explanation');
     const [showSummaryModal, setShowSummaryModal] = useState(false);
-
+    const [showIntentModal, setShowIntentModal] = useState(false);
 
     if (!problem) return <div className={styles.content}>Loading...</div>;
 
@@ -221,17 +238,16 @@ const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion, proble
 
     // Determine content based on mode
     let currentView = activeTab;
-    if (mode === 'test') currentView = 'questions'; // In test mode, show questions
-    if (mode === 'review') currentView = 'review_questions'; // Modified for accordion view
+    if (mode === 'test') currentView = 'questions';
+    if (mode === 'review') currentView = 'review_questions';
 
     const selectedQuestion = questions.find(q => q.id === selectedQuestionId);
 
-    // Get common and specific explanation data
-    // Use optional chaining carefully since explanations might be missing for new problems
     const rawExplanation = (selectedQuestionId && explanations) ? explanations[selectedQuestionId] : null;
     const commonData = rawExplanation ? rawExplanation.common : null;
     const levelData = rawExplanation ? rawExplanation[level] : null;
     const correct = rawExplanation ? rawExplanation.correct : null;
+    const sampleAnswers = rawExplanation ? rawExplanation.sampleAnswers : null;
 
     return (
         <>
@@ -250,30 +266,41 @@ const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion, proble
                         >
                             設問
                         </button>
-                        <button
-                            className={`${styles.tab} ${activeTab === 'create' ? styles.activeTab : ''}`}
-                            onClick={() => setActiveTab('create')}
-                        >
-                            類題作成
-                        </button>
                     </div>
-                </div >
+                </div>
             )}
 
-            {
-                mode === 'test' && (
-                    <div className={styles.panelHeader}>
-                        <h3>設問</h3>
-                    </div>
-                )
-            }
+            {mode === 'test' && (
+                <div className={styles.panelHeader}>
+                    <h3>設問</h3>
+                </div>
+            )}
 
-            {
-                mode === 'review' && (
-                    <div className={styles.panelHeader} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h3>解説</h3>
-                        {/* Summary Button for Exam Problems only */}
-                        {problem?.badges?.includes('入試問題') && (
+            {mode === 'review' && (
+                <div className={styles.panelHeader} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3>解説</h3>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                        {problem?.badges?.includes('オリジナル入試問題') && (
+                            <button
+                                onClick={() => setShowIntentModal(true)}
+                                style={{
+                                    padding: '6px 12px',
+                                    backgroundColor: '#fff3cd',
+                                    border: '1px solid #ffeeba',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    fontSize: '0.9rem',
+                                    color: '#856404',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    fontWeight: 'bold'
+                                }}
+                            >
+                                💡 作問意図
+                            </button>
+                        )}
+                        {(problem?.summary || problem?.badges?.includes('入試問題')) && (
                             <button
                                 onClick={() => setShowSummaryModal(true)}
                                 style={{
@@ -287,49 +314,69 @@ const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion, proble
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '6px',
-                                    fontWeight: 'bold',
-                                    transition: 'background-color 0.2s'
+                                    fontWeight: 'bold'
                                 }}
-                                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f8f9fa'}
-                                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#ffffff'}
                             >
                                 📝 要約
                             </button>
                         )}
                     </div>
-                )
-            }
-
-
+                </div>
+            )}
 
             <div className={styles.content}>
                 {currentView === 'explanation' && (
                     <div className={`${styles.explanationContainer} ${(selectedQuestionId && mode === 'review') ? styles.explanationFrame : ''}`}>
                         {!selectedQuestionId ? (
-                            mode === 'review' ? (
-                                <div className={styles.emptyState}>
-                                    <p>左側の設問パネルから問題を選択してください</p>
-                                </div>
-                            ) : (
-                                <div className={styles.emptyState}>
-                                    <p>設問を選択して解説を表示してください</p>
-                                </div>
-                            )
+                            <div className={styles.emptyState}>
+                                <p>{mode === 'review' ? '左側の設問パネルから問題を選択してください' : '設問を選択して解説を表示してください'}</p>
+                            </div>
                         ) : (
                             <>
                                 <div className={styles.explanationHeader}>
                                     <h3>Q{selectedQuestion?.number} 解説</h3>
+                                    {!sampleAnswers && (
+                                        <div className={styles.correctBadge} style={{ whiteSpace: 'pre-wrap', display: 'inline-block' }}>
+                                            <span style={{ fontWeight: 'bold' }}>正解: </span>
+                                            {correct && correct.split(/<br\s*\/?>|\n/).map((line, i) => (
+                                                <React.Fragment key={i}>
+                                                    {i > 0 && <br />}
+                                                    {line}
+                                                </React.Fragment>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
 
-                                    <div className={styles.correctBadge} style={{ whiteSpace: 'pre-wrap', display: 'inline-block' }}>
-                                        <span style={{ fontWeight: 'bold' }}>正解: </span>
-                                        {correct && correct.split(/<br\s*\/?>|\n/).map((line, i) => (
-                                            <React.Fragment key={i}>
-                                                {i > 0 && <br />}
-                                                {line}
-                                            </React.Fragment>
+                                {sampleAnswers && sampleAnswers.length > 0 && (
+                                    <div className={styles.sampleAnswerContainer}>
+                                        {sampleAnswers.map((sample, i) => (
+                                            <div key={i} className={styles.sampleAnswerPanel}>
+                                                <div className={styles.sampleAnswerTitle}>
+                                                    <span>💡</span> 解答例 {i + 1}
+                                                </div>
+                                                <div className={styles.sampleAnswerText}>
+                                                    {parseSimpleMarkdown(sample.text)}
+                                                </div>
+                                                <div className={styles.sampleAnswerMeta}>
+                                                    {sample.basis && (
+                                                        <div className={styles.sampleMetaItem}>
+                                                            <span className={styles.sampleMetaLabel}>作成根拠</span>
+                                                            <span className={styles.sampleMetaValue}>{parseSimpleMarkdown(sample.basis)}</span>
+                                                        </div>
+                                                    )}
+                                                    {sample.explanation && (
+                                                        <div className={styles.sampleMetaItem}>
+                                                            <span className={styles.sampleMetaLabel}>ポイント</span>
+                                                            <span className={styles.sampleMetaValue}>{parseSimpleMarkdown(sample.explanation)}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
                                         ))}
                                     </div>
-                                </div>
+                                )}
+
                                 <ExplanationContent
                                     levelData={levelData}
                                     commonData={commonData}
@@ -341,6 +388,17 @@ const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion, proble
                         )}
                     </div>
                 )}
+
+                {currentView === 'questions' && (
+                    <QuestionList
+                        styles={styles}
+                        questions={questions}
+                        selectedQuestionId={selectedQuestionId}
+                        onSelectQuestion={onSelectQuestion}
+                        footnotes={problem.footnotes}
+                    />
+                )}
+
                 {currentView === 'review_questions' && (
                     <div className={styles.reviewList}>
                         {questions.map((q, idx) => {
@@ -348,7 +406,8 @@ const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion, proble
                             const rawEx = explanations ? explanations[q.id] : null;
                             const lData = rawEx ? rawEx[level] : null;
                             const cData = rawEx ? rawEx.common : null;
-                            const correct = rawEx ? rawEx.correct : null;
+                            const correctAns = rawEx ? rawEx.correct : null;
+                            const sAns = rawEx ? rawEx.sampleAnswers : null;
 
                             return (
                                 <div key={q.id} className={`${styles.reviewItem} ${isSelected ? styles.selectedReviewItem : ''}`}>
@@ -358,60 +417,50 @@ const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion, proble
                                     >
                                         <span className={styles.qBadge}>Q{q.number || idx + 1}</span>
                                         <div style={{ flex: 1 }}>
-                                            <p className={styles.qText} style={{ whiteSpace: 'pre-wrap' }}>
-                                                {q.text.split('\n').map((line, i) => {
-                                                    const imageMatch = line.match(/!\[(.*?)\]\((.*?)\)/);
-                                                    if (imageMatch) {
-                                                        return (
-                                                            <React.Fragment key={i}>
-                                                                <img
-                                                                    src={imageMatch[2]}
-                                                                    alt={imageMatch[1]}
-                                                                    className={styles.questionInnerImage}
-                                                                    style={{ maxWidth: '70%', maxHeight: '350px', objectFit: 'contain', marginTop: '8px', marginBottom: '8px', borderRadius: '4px' }}
-                                                                />
-                                                                <br />
-                                                            </React.Fragment>
-                                                        );
-                                                    }
-                                                    return (
-                                                        <React.Fragment key={i}>
-                                                            {line}
-                                                            {i < q.text.split('\n').length - 1 && <br />}
-                                                        </React.Fragment>
-                                                    );
-                                                })}
-                                            </p>
-                                            {q.imageUrl && (
-                                                <img
-                                                    src={q.imageUrl}
-                                                    alt={`Question ${q.number}`}
-                                                    className={styles.questionImage}
-                                                />
+                                            <p className={styles.qText} style={{ whiteSpace: 'pre-wrap' }}>{q.text}</p>
+                                            {q.diagram_text && (
+                                                <div className={styles.memoContainer}>
+                                                    <div className={styles.memoHeader}><span>📝</span> SUMMARY MEMO</div>
+                                                    <p className={styles.memoContent}>{q.diagram_text}</p>
+                                                </div>
                                             )}
                                         </div>
                                     </div>
-                                    {q.options && (
-                                        <div className={styles.reviewOptions}>
-                                            <div className={styles.optionsList}>
-                                                {q.options.map((opt, i) => {
-                                                    const labels = ['ア', 'イ', 'ウ', 'エ', 'オ'];
-                                                    const labelChar = labels[i] || (i + 1).toString();
-                                                    return (
-                                                        <div key={i} className={styles.optionItem}>
-                                                            <span className={styles.optionIndex}>{labelChar}.</span>
-                                                            <span>{opt}</span>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    )}
                                     {isSelected && (
                                         <div className={styles.reviewExplanation}>
-                                            <div className={styles.explanationHeader}>
-                                                <span className={styles.correctBadge}>正解: {correct}</span>
+                                            <div className={styles.explanationHeader} style={{ marginBottom: sAns ? '0' : '24px' }}>
+                                                {!sAns && <span className={styles.correctBadge} style={{ display: 'inline-block' }}>正解: {correctAns}</span>}
                                             </div>
+
+                                            {sAns && sAns.length > 0 && (
+                                                <div className={styles.sampleAnswerContainer}>
+                                                    {sAns.map((sample, i) => (
+                                                        <div key={i} className={styles.sampleAnswerPanel}>
+                                                            <div className={styles.sampleAnswerTitle}>
+                                                                <span>💡</span> 解答例 {i + 1}
+                                                            </div>
+                                                            <div className={styles.sampleAnswerText}>
+                                                                {parseSimpleMarkdown(sample.text)}
+                                                            </div>
+                                                            <div className={styles.sampleAnswerMeta}>
+                                                                {sample.basis && (
+                                                                    <div className={styles.sampleMetaItem}>
+                                                                        <span className={styles.sampleMetaLabel}>作成根拠</span>
+                                                                        <span className={styles.sampleMetaValue}>{parseSimpleMarkdown(sample.basis)}</span>
+                                                                    </div>
+                                                                )}
+                                                                {sample.explanation && (
+                                                                    <div className={styles.sampleMetaItem}>
+                                                                        <span className={styles.sampleMetaLabel}>ポイント</span>
+                                                                        <span className={styles.sampleMetaValue}>{parseSimpleMarkdown(sample.explanation)}</span>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+
                                             <ExplanationContent
                                                 levelData={lData}
                                                 commonData={cData}
@@ -426,28 +475,6 @@ const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion, proble
                         })}
                     </div>
                 )}
-                {/* Placeholder for Create/Instruction Manual Tab */}
-                {currentView === 'create' && (
-                    <div className={styles.emptyState}>
-                        <p>指導者用資料作成・類題作成機能は準備中です。</p>
-                    </div>
-                )}
-                {currentView === 'questions' && (
-                    <QuestionList
-                        styles={styles}
-                        questions={questions}
-                        selectedQuestionId={selectedQuestionId}
-                        onSelectQuestion={onSelectQuestion}
-                        footnotes={problem.footnotes}
-                    />
-                )}
-                {currentView === 'create' && (
-                    <div>
-                        <h2>Create Similar Problem</h2>
-                        <p>Placeholder for creation tools...</p>
-                    </div>
-                )}
-
             </div>
 
             {showSummaryModal && (
@@ -455,6 +482,27 @@ const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion, proble
                     problem={problem}
                     onClose={() => setShowSummaryModal(false)}
                 />
+            )}
+
+            {showIntentModal && (
+                <div style={{
+                    position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex',
+                    justifyContent: 'center', alignItems: 'center', zIndex: 1000
+                }} onClick={() => setShowIntentModal(false)}>
+                    <div style={{
+                        backgroundColor: 'white', padding: '24px', borderRadius: '8px',
+                        maxWidth: '600px', width: '90%', maxHeight: '80vh', overflowY: 'auto'
+                    }} onClick={(e) => e.stopPropagation()}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #eee', paddingBottom: '8px' }}>
+                            <h3 style={{ margin: 0, color: '#856404' }}>💡 作問意図・傾向分析</h3>
+                            <button onClick={() => setShowIntentModal(false)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}>×</button>
+                        </div>
+                        <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6', fontSize: '0.95rem', color: '#333' }}>
+                            {problem?.authorIntent ? parseSimpleMarkdown(problem.authorIntent) : "作問意図のデータがありません。"}
+                        </div>
+                    </div>
+                </div>
             )}
         </>
     );

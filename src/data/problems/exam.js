@@ -7,6 +7,9 @@ import tokushima2024Problem7 from './exam_tokushima_2024_7.js';
 import tokushima2023Problem5 from './exam_tokushima_2023_5.js';
 import tokushima2023Problem6 from './exam_tokushima_2023_6.js';
 import tokushima2023Problem7 from './exam_tokushima_2023_7.js';
+import tokushima2022Problem5 from './exam_tokushima_2022_5.js';
+import tokushima2022Problem6 from './exam_tokushima_2022_6.js';
+import tokushima2022Problem7 from './exam_tokushima_2022_7.js';
 
 export const examProblems = [
     tokushima2025Problem5,
@@ -17,5 +20,8 @@ export const examProblems = [
     tokushima2024Problem7,
     tokushima2023Problem5,
     tokushima2023Problem6,
-    tokushima2023Problem7
+    tokushima2023Problem7,
+    tokushima2022Problem5,
+    tokushima2022Problem6,
+    tokushima2022Problem7
 ];

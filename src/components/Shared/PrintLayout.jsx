@@ -42,16 +42,24 @@ const PrintLayout = ({ problem }) => {
         lineHeight: passageLineHeight
     };
 
-    // Helper to process styled text (e.g. <u> tags)
+    // Helper to process styled text (e.g. <u> tags, **bold**)
     const renderStyledText = (text) => {
         if (!text) return null;
-        const parts = text.split(/(<u>.*?<\/u>)/g);
+        // Split by <u> and **bold**
+        const parts = text.split(/(<u>.*?<\/u>|\*\*.*?\*\*)/g);
         return parts.map((part, i) => {
             if (part.startsWith('<u>') && part.endsWith('</u>')) {
                 return (
                     <span key={i} className={styles.underlined}>
                         {part.replace(/<\/?u>/g, '')}
                     </span>
+                );
+            }
+            if (part.startsWith('**') && part.endsWith('**')) {
+                return (
+                    <strong key={i} style={{ fontWeight: 'bold' }}>
+                        {part.slice(2, -2)}
+                    </strong>
                 );
             }
             return part;
@@ -170,7 +178,7 @@ const PrintLayout = ({ problem }) => {
                         {questions.map((q, idx) => (
                             <div key={idx} className={styles.questionItem}>
                                 <div className={styles.questionNumberBox}>
-                                    <span className={styles.questionNumber}>{q.number}</span>
+                                    <span className={styles.questionNumber}>{q.number || `(${idx + 1})`}</span>
                                 </div>
                                 <div className={styles.questionContent}>
                                     <div className={styles.questionText}>
@@ -217,6 +225,12 @@ const PrintLayout = ({ problem }) => {
                                             );
                                         })}
                                     </div>
+                                    {q.diagram_text && (
+                                        <div className={styles.memoContainer}>
+                                            <div className={styles.memoHeader}>📝 SUMMARY MEMO</div>
+                                            <p className={styles.memoContent}>{q.diagram_text}</p>
+                                        </div>
+                                    )}
                                     {q.imageUrl && (
                                         <img src={q.imageUrl} className={styles.questionImage} alt="Question" />
                                     )}
@@ -261,7 +275,9 @@ const PrintLayout = ({ problem }) => {
                                 {questions.map((q, idx) => {
                                     // Determine answer display
                                     let displayAnswer = '';
-                                    if (q.answerLabel) {
+                                    if (q.sampleAnswers && q.sampleAnswers.length > 0) {
+                                        displayAnswer = `(解答例) ${q.sampleAnswers[0].text}`;
+                                    } else if (q.answerLabel) {
                                         // Use explicit label (e.g. for fill-in-blanks)
                                         displayAnswer = q.answerLabel;
                                     } else if (q.answer !== undefined) {
@@ -270,9 +286,9 @@ const PrintLayout = ({ problem }) => {
                                     }
 
                                     return (
-                                        <span key={idx} className={styles.answerItem}>
-                                            <span className={styles.ansNum}>{q.number}</span>
-                                            <span className={styles.ansVal}>{displayAnswer}</span>
+                                        <span key={idx} className={styles.answerItem} style={{ flexBasis: displayAnswer.length > 20 ? '100%' : 'auto' }}>
+                                            <span className={styles.ansNum}>{q.number || `(${idx + 1})`}</span>
+                                            <span className={styles.ansVal}>{renderStyledText(displayAnswer)}</span>
                                         </span>
                                     );
                                 })}

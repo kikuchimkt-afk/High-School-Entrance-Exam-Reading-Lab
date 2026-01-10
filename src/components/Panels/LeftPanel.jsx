@@ -180,15 +180,18 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode, problem
                         <h2 className={styles.problemTitle}>{title}</h2>
                         <div className={styles.problemText}>
                             {content.split(/\n+/).filter(p => p.trim().length > 0).map((paragraph, pIdx) => {
-                                // Check for Image tag [IMAGE:path]
-                                const imageMatch = paragraph.match(/^\[IMAGE:(.+)\]$/);
+                                // Check for Image tag [IMAGE:path|width?]
+                                const imageMatch = paragraph.match(/^\[IMAGE:(.+?)(?:\|(.+))?\]$/);
                                 if (imageMatch) {
+                                    const src = imageMatch[1].trim();
+                                    const width = imageMatch[2] ? imageMatch[2].trim() : null;
                                     return (
                                         <img
                                             key={pIdx}
-                                            src={imageMatch[1].trim()}
+                                            src={src}
                                             alt="Content illustration"
-                                            className={styles.contentImage}
+                                            className={`${styles.contentImage} ${width ? styles.blockImage : ''}`}
+                                            style={width ? { width: width } : {}}
                                         />
                                     );
                                 }
@@ -237,10 +240,26 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode, problem
                                     });
                                 });
 
+                                // Protect double-quoted text (treat quoted segments as single units)
+                                protectedPara = protectedPara.replace(/("[^"]*")/g, (match) => {
+                                    const placeholder = `__PLACEHOLDER_${placeholders.length}__`;
+                                    placeholders.push(match);
+                                    // Add a dummy period and space to ensure it's treated as a sentence end
+                                    // but we'll remove it during restoration
+                                    return placeholder + ". ";
+                                });
+
+                                // Protect [ A ] type placeholders
+                                protectedPara = protectedPara.replace(/(\[\s*[A-Y]\s*\])/g, (match) => {
+                                    const placeholder = `__PLACEHOLDER_${placeholders.length}__`;
+                                    placeholders.push(match);
+                                    return placeholder + ". ";
+                                });
+
                                 // Ensure sentence split happens even if sentence ends with </u> by adding a space
                                 protectedPara = protectedPara.replace(/([.!?])<\/u>/g, '$1 </u>');
 
-                                let sentences = protectedPara.match(/[^.!?]+[.!?]+['"]*(\s+|$)/g) || [protectedPara];
+                                let sentences = protectedPara.match(/[^.!?]+[.!?]+['"]*(\s+|$)|[^.!?]+$/g) || [protectedPara];
 
                                 // Balance <u> tags across sentences
                                 let isUnderlineOpen = false;
@@ -274,9 +293,12 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode, problem
                                 sentences = sentences.map(s => {
                                     let restored = s;
                                     placeholders.forEach((original, i) => {
-                                        restored = restored.replace(`__PLACEHOLDER_${i}__`, original);
+                                        const p = `__PLACEHOLDER_${i}__`;
+                                        // Handle both cases: with the dummy period/space and without
+                                        restored = restored.replace(new RegExp(p + '\\.\\s+', 'g'), original);
+                                        restored = restored.replace(new RegExp(p, 'g'), original);
                                     });
-                                    return restored;
+                                    return restored.trim();
                                 });
 
                                 const renderStyledText = (text) => {
