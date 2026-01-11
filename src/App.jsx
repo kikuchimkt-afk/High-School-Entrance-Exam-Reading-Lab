@@ -45,6 +45,12 @@ function App() {
   const [selectedProblemId, setSelectedProblemId] = useState(null);
   const [homeCategory, setHomeCategory] = useState('中3');
 
+  // Lifted Home Page States
+  const [searchTags, setSearchTags] = useState([]);
+  const [textInput, setTextInput] = useState('');
+  const [searchMode, setSearchMode] = useState('OR');
+  const [homeScrollY, setHomeScrollY] = useState(0);
+
   // Check for URL params on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -55,6 +61,7 @@ function App() {
   }, []);
 
   const handleSelectProblem = (id) => {
+    setHomeScrollY(window.scrollY);
     setSelectedProblemId(id);
   };
 
@@ -135,6 +142,13 @@ function App() {
           onSelectProblem={handleSelectProblem}
           selectedGrade={homeCategory}
           onSelectGrade={setHomeCategory}
+          searchTags={searchTags}
+          setSearchTags={setSearchTags}
+          textInput={textInput}
+          setTextInput={setTextInput}
+          searchMode={searchMode}
+          setSearchMode={setSearchMode}
+          homeScrollY={homeScrollY}
         />
       ) : (
         <MainLayout

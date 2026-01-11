@@ -2,12 +2,25 @@ import React, { useState } from 'react';
 import styles from './home.module.css';
 import { mockProblems } from '../../data/mockData';
 
-const HomePage = ({ onSelectProblem }) => {
-    // 1. Filter State
-    // searchTags: Array of { type: 'GRADE' | 'GRAMMAR' | 'TOPIC' | 'TEST' | 'GENRE', value: '...' }
-    const [searchTags, setSearchTags] = useState([]);
-    const [textInput, setTextInput] = useState('');
-    const [searchMode, setSearchMode] = useState('OR'); // 'OR' | 'AND'
+const HomePage = ({
+    onSelectProblem,
+    searchTags,
+    setSearchTags,
+    textInput,
+    setTextInput,
+    searchMode,
+    setSearchMode,
+    homeScrollY
+}) => {
+    // 1. Scroll Restoration
+    React.useEffect(() => {
+        if (homeScrollY > 0) {
+            // Use requestAnimationFrame to ensure the content is rendered
+            requestAnimationFrame(() => {
+                window.scrollTo(0, homeScrollY);
+            });
+        }
+    }, []);
 
     // 2. Pre-calculated Filter Options
     // (A) Grade Options
