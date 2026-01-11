@@ -240,26 +240,15 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode, problem
                                     });
                                 });
 
-                                // Protect double-quoted text (treat quoted segments as single units)
-                                protectedPara = protectedPara.replace(/("[^"]*")/g, (match) => {
-                                    const placeholder = `__PLACEHOLDER_${placeholders.length}__`;
-                                    placeholders.push(match);
-                                    // Add a dummy period and space to ensure it's treated as a sentence end
-                                    // but we'll remove it during restoration
-                                    return placeholder + ". ";
-                                });
-
-                                // Protect [ A ] type placeholders
-                                protectedPara = protectedPara.replace(/(\[\s*[A-Y]\s*\])/g, (match) => {
-                                    const placeholder = `__PLACEHOLDER_${placeholders.length}__`;
-                                    placeholders.push(match);
-                                    return placeholder + ". ";
-                                });
+                                // Ensure brackets are treated as separate units for splitting
+                                // Use a special marker to prevent them from being consumed by the sentence regex
+                                protectedPara = protectedPara.replace(/(\[[^\]]+\])/g, ' $1 ');
 
                                 // Ensure sentence split happens even if sentence ends with </u> by adding a space
                                 protectedPara = protectedPara.replace(/([.!?])<\/u>/g, '$1 </u>');
 
-                                let sentences = protectedPara.match(/[^.!?]+[.!?]+['"]*(\s+|$)|[^.!?]+$/g) || [protectedPara];
+                                // Robust Split Regex: Matches bracketed tags OR segments ending in .!? followed by whitespace/next sentence/bracket
+                                let sentences = protectedPara.match(/\[[^\]]+\]|[^.!?\[]+[.!?]+['"]*(?=\s+|[A-Z]|\[|$)|[^.!?\[]+$/g) || [protectedPara];
 
                                 // Balance <u> tags across sentences
                                 let isUnderlineOpen = false;
@@ -286,8 +275,8 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode, problem
                                         isUnderlineOpen = false;
                                     }
 
-                                    return balanced;
-                                });
+                                    return balanced.trim();
+                                }).filter(s => s.length > 0);
 
                                 // Restore all placeholders
                                 sentences = sentences.map(s => {

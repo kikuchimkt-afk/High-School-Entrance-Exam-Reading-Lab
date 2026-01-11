@@ -1,6 +1,6 @@
 const exam_tokushima_2025_5 = {
     "id": "exam_tokushima_2025_5",
-    "title": "徳島県 2025年 大問5",
+    "title": "徳島県 2025年 大問5 [読書週間と異文化交流]",
     "category": "中学3年",
     "target": "受験生",
     "number": "入試問題1",

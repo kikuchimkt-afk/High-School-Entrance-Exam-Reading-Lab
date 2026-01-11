@@ -1,6 +1,6 @@
 const exam_tokushima_2022_7 = {
     "id": "exam_tokushima_2022_7",
-    "title": "徳島県 2022年 大問7",
+    "title": "徳島県 2022年 大問7 [間違いを恐れない交流の心]",
     "category": "中学3年",
     "target": "受験生",
     "number": "入試問題12",

@@ -1,6 +1,6 @@
 const exam_tokushima_2022_6 = {
     "id": "exam_tokushima_2022_6",
-    "title": "徳島県 2022年 大問6",
+    "title": "徳島県 2022年 大問6 [誰もが使いやすい博物館]",
     "category": "中学3年",
     "target": "受験生",
     "number": "入試問題11",

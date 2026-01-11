@@ -1,6 +1,10 @@
 import tokushima_2026_mock_q7_cleaning from './tokushima_2026_mock_q7_cleaning.js';
 import tokushima_mock_d5_aurora from './tokushima_mock_d5_aurora.js';
 import tokushima_mock_2025_yamaguchi_remix from './tokushima_mock_2025_yamaguchi_remix.js';
+import tokushima_mock_d5_paper_recycling from './tokushima_mock_d5_paper_recycling.js';
+import tokushima_mock_story_yuta_canada from './tokushima_mock_story_yuta_canada.js';
+import tokushima_mock_q7_mie_2024 from './tokushima_mock_q7_mie_2024.js';
+
 
 const weddingRegistryProblem = {
     id: "p2",
@@ -1165,5 +1169,4 @@ Sometimes AI Suitcase can't ( ) the ( ) of a traffic light when the sunlight is 
     }
 };
 
-export const grade3Problems = [weddingRegistryProblem, newYearsResolutionProblem, rinsSpeechProblem, tokushima_2026_mock_q7_cleaning,
-    tokushima_mock_d5_aurora, tokushima_mock_2025_yamaguchi_remix];
+export const grade3Problems = [weddingRegistryProblem, newYearsResolutionProblem, rinsSpeechProblem, tokushima_mock_d5_aurora, tokushima_mock_2025_yamaguchi_remix, tokushima_2026_mock_q7_cleaning, tokushima_mock_d5_paper_recycling, tokushima_mock_story_yuta_canada, tokushima_mock_q7_mie_2024];

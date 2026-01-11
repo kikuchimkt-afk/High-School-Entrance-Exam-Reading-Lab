@@ -401,6 +401,16 @@ const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion, proble
 
                 {currentView === 'review_questions' && (
                     <div className={styles.reviewList}>
+                        {problem.footnotes && problem.footnotes.length > 0 && (
+                            <div className={styles.footnotesContainer} style={{ marginBottom: '20px' }}>
+                                <p className={styles.footnotesTitle}>注）</p>
+                                <div className={styles.footnotesList}>
+                                    {problem.footnotes.map((note, index) => (
+                                        <span key={index} className={styles.footnoteItem}>* {note}</span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                         {questions.map((q, idx) => {
                             const isSelected = selectedQuestionId === q.id;
                             const rawEx = explanations ? explanations[q.id] : null;
@@ -417,11 +427,49 @@ const RightPanel = ({ styles, selectedQuestionId, mode, onSelectQuestion, proble
                                     >
                                         <span className={styles.qBadge}>Q{q.number || idx + 1}</span>
                                         <div style={{ flex: 1 }}>
-                                            <p className={styles.qText} style={{ whiteSpace: 'pre-wrap' }}>{q.text}</p>
+                                            <p className={styles.qText} style={{ whiteSpace: 'pre-wrap' }}>
+                                                {q.text.split('\n').map((line, i) => {
+                                                    const imageMatch = line.match(/!\[(.*?)\]\((.*?)\)/);
+                                                    if (imageMatch) {
+                                                        return (
+                                                            <React.Fragment key={i}>
+                                                                <img
+                                                                    src={imageMatch[2]}
+                                                                    alt={imageMatch[1]}
+                                                                    style={{ maxWidth: '100%', marginTop: '8px', borderRadius: '4px' }}
+                                                                />
+                                                                <br />
+                                                            </React.Fragment>
+                                                        );
+                                                    }
+                                                    return <React.Fragment key={i}>{line}<br /></React.Fragment>;
+                                                })}
+                                            </p>
+                                            {q.imageUrl && (
+                                                <img src={q.imageUrl} alt="Question Reference" style={{ maxWidth: '100%', marginTop: '8px', borderRadius: '4px' }} />
+                                            )}
                                             {q.diagram_text && (
                                                 <div className={styles.memoContainer}>
                                                     <div className={styles.memoHeader}><span>📝</span> SUMMARY MEMO</div>
                                                     <p className={styles.memoContent}>{q.diagram_text}</p>
+                                                </div>
+                                            )}
+                                            {q.options && q.options.length > 0 && (
+                                                <div className={styles.optionsList} style={{ marginTop: '12px' }}>
+                                                    {q.options.map((option, oIdx) => {
+                                                        const labels = ['ア', 'イ', 'ウ', 'エ', 'オ', 'カ'];
+                                                        const labelChar = labels[oIdx] || (oIdx + 1).toString();
+                                                        let displayOption = option;
+                                                        if (option.trim().startsWith(labelChar)) {
+                                                            displayOption = option.trim().substring(labelChar.length).replace(/^[ .．、]+/, '');
+                                                        }
+                                                        return (
+                                                            <div key={oIdx} className={styles.optionItem} style={{ marginBottom: '4px', fontSize: '0.95rem', color: '#555' }}>
+                                                                <span style={{ fontWeight: 'bold', marginRight: '8px', color: '#228be6' }}>{labelChar}.</span>
+                                                                <span>{displayOption}</span>
+                                                            </div>
+                                                        );
+                                                    })}
                                                 </div>
                                             )}
                                         </div>

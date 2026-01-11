@@ -20,7 +20,7 @@ const HomePage = ({ onSelectProblem }) => {
     ];
 
     // (B) Test Keywords (Hardcoded)
-    const testKeywords = ["学力テスト", "基礎学", "定期テスト", "入試", "実力テスト", "入試問題", "オリジナル入試問題", "徳島県模試"];
+    const testKeywords = ["学力テスト", "基礎学", "定期テスト", "入試", "実力テスト", "入試問題", "オリジナル問題", "徳島県模試"];
 
     // (C) Grammar Whitelist (For Middle Column)
     // Anything NOT in this list and NOT a test keyword/grade will go to "Topics"

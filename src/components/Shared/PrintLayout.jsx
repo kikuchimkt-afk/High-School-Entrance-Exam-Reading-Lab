@@ -79,14 +79,17 @@ const PrintLayout = ({ problem }) => {
                     <h1 className={styles.title}>{title}</h1>
                     <div className={styles.passageContent} style={passageStyle}>
                         {content.split(/\n+/).filter(p => p.trim().length > 0).map((paragraph, idx) => {
-                            // Check for Image tag
-                            const imageMatch = paragraph.match(/^\[IMAGE:(.+)\]$/);
+                            // Check for Image tag [IMAGE:path|width?]
+                            const imageMatch = paragraph.match(/^\[IMAGE:(.+?)(?:\|(.+))?\]$/);
                             if (imageMatch) {
+                                const src = imageMatch[1].trim();
+                                const width = imageMatch[2] ? imageMatch[2].trim() : '100%';
                                 return (
                                     <img
                                         key={idx}
-                                        src={imageMatch[1].trim()}
+                                        src={src}
                                         className={styles.contentImage}
+                                        style={{ width: width, display: 'block', margin: '1em 0' }}
                                         alt=""
                                     />
                                 );

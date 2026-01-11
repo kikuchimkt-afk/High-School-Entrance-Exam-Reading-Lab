@@ -1,6 +1,6 @@
 const exam_tokushima_2025_7 = {
     "id": "exam_tokushima_2025_7",
-    "title": "徳島県 2025年 大問7",
+    "title": "徳島県 2025年 大問7 [サイクリングと町の新発見]",
     "category": "中学3年",
     "target": "受験生",
     "number": "入試問題3",

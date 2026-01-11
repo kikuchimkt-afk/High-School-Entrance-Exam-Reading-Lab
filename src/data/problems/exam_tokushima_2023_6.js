@@ -1,6 +1,6 @@
 const exam_tokushima_2023_6 = {
     "id": "exam_tokushima_2023_6",
-    "title": "徳島県 2023年 大問6",
+    "title": "徳島県 2023年 大問6 [生活様式の違いと相互理解]",
     "category": "中学3年",
     "target": "受験生",
     "number": "入試問題8",
