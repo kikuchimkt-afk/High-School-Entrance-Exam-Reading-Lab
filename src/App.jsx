@@ -51,6 +51,11 @@ function App() {
   const [searchMode, setSearchMode] = useState('OR');
   const [homeScrollY, setHomeScrollY] = useState(0);
 
+  // Print preview settings
+  const [printScale, setPrintScale] = useState(100);
+  const [printMargin, setPrintMargin] = useState(10);
+  const [showBackground, setShowBackground] = useState(false);
+
   // Check for URL params on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -79,20 +84,49 @@ function App() {
   // If in print mode, render ONLY the PrintLayout
   if (isPrintMode && selectedProblem) {
     return (
-      <div style={{ background: 'white', minHeight: '100vh', position: 'relative' }}>
+      <div style={{ background: showBackground ? '#555' : 'white', minHeight: '100vh', position: 'relative' }}>
         {/* Control Bar for Print View */}
         <div style={{
           position: 'fixed',
-          top: '20px',
-          right: '20px',
+          top: '0',
+          left: '0',
+          right: '0',
           zIndex: 1000,
           display: 'flex',
-          gap: '10px'
+          gap: '10px',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          padding: '10px 20px',
+          background: '#f0f0f0',
+          borderBottom: '1px solid #ccc'
         }} className="no-print">
+          {/* Scale Control */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'white', padding: '5px 10px', borderRadius: '5px', border: '1px solid #ddd' }}>
+            <button onClick={() => setPrintScale(Math.max(50, printScale - 5))} style={{ width: '28px', height: '28px', border: '1px solid #ccc', background: '#f3f4f6', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>−</button>
+            <span>サイズ: {printScale}%</span>
+            <input type="range" min="50" max="150" value={printScale} onChange={e => setPrintScale(Number(e.target.value))} style={{ width: '80px' }} />
+            <button onClick={() => setPrintScale(Math.min(150, printScale + 5))} style={{ width: '28px', height: '28px', border: '1px solid #ccc', background: '#f3f4f6', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer' }}>+</button>
+          </div>
+          {/* Margin Control */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'white', padding: '5px 10px', borderRadius: '5px', border: '1px solid #ddd' }}>
+            <label>余白:</label>
+            <select value={printMargin} onChange={e => setPrintMargin(Number(e.target.value))} style={{ padding: '4px 8px', borderRadius: '4px', border: '1px solid #ccc' }}>
+              <option value={0}>なし</option>
+              <option value={5}>狭い</option>
+              <option value={10}>普通</option>
+              <option value={15}>広い</option>
+            </select>
+          </div>
+          {/* Background Toggle */}
+          <label style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'white', padding: '5px 10px', borderRadius: '5px', border: '1px solid #ddd', cursor: 'pointer' }}>
+            <input type="checkbox" checked={showBackground} onChange={e => setShowBackground(e.target.checked)} />
+            背景を表示
+          </label>
+          {/* Buttons */}
           <button
             onClick={() => window.print()}
             style={{
-              padding: '10px 20px',
+              padding: '8px 16px',
               background: '#228be6',
               color: 'white',
               border: 'none',
@@ -102,13 +136,13 @@ function App() {
               boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
             }}
           >
-            🖨️ 印刷する
+            🖨️ 印刷
           </button>
           <button
             onClick={() => window.close()}
             style={{
-              padding: '10px 20px',
-              background: '#fa5252',
+              padding: '8px 16px',
+              background: '#6b7280',
               color: 'white',
               border: 'none',
               borderRadius: '6px',
@@ -117,7 +151,7 @@ function App() {
               boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
             }}
           >
-            閉じる
+            ✕ 閉じる
           </button>
         </div>
 
@@ -128,9 +162,19 @@ function App() {
                 }
             `}</style>
 
-        <ErrorBoundary>
-          <PrintLayout problem={selectedProblem} />
-        </ErrorBoundary>
+        {/* Scale Container */}
+        <div style={{
+          transform: `scale(${printScale / 100})`,
+          transformOrigin: 'top left',
+          width: `${10000 / printScale}%`,
+          padding: `${printMargin}mm ${printMargin + 2}mm`,
+          paddingTop: '60px',
+          boxSizing: 'border-box'
+        }}>
+          <ErrorBoundary>
+            <PrintLayout problem={selectedProblem} />
+          </ErrorBoundary>
+        </div>
       </div>
     );
   }
