@@ -24,11 +24,11 @@ Ken : Well, smartphones are very useful, so I'm not surprised at this result. Lo
 
 Meg : Oh, yes. It says many students use them for playing games and watching *video(s).
 
-Ken : Right. And look at this part. It says most students use smartphones for more than an hour after school on weekdays. I'm worried that they don't have much time to study or sleep. So, the Student Council wants us to make *rule(s) about <u>① how to use our smartphones</u> at home.
+Ken : Right. And look at this part. It says most students use smartphones for more than an hour after school on weekdays. I'm worried that they don't have much time to study or sleep. So, the Student Council wants us to make *rule(s) about <u>① (how)</u> at home.
 
 Meg : I agree. I don't have a phone, but sometimes I feel my friends use their phones too much. I think making rules is a good idea. Do you have your own rules, Ken? <u>What rules do you have?</u>
 
-Ken : Well, my rule is different for weekdays and weekends. On weekdays, I use it for about thirty minutes, *mainly to *look things *up for my homework. It's <u>② faster than reading</u> books. On weekends, I use it just for fun. I like watching videos on my smartphone, so I've decided to use it for about an hour.
+Ken : Well, my rule is different for weekdays and weekends. On weekdays, I use it for about thirty minutes, *mainly to *look things *up for my homework. It's <u>② (faster)</u> books. On weekends, I use it just for fun. I like watching videos on my smartphone, so I've decided to use it for about an hour.
 
 Meg : That sounds like a good way to use it.`,
     footnotes: [
