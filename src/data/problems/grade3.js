@@ -4,6 +4,14 @@ import tokushima_mock_2025_yamaguchi_remix from './tokushima_mock_2025_yamaguchi
 import tokushima_mock_d5_paper_recycling from './tokushima_mock_d5_paper_recycling.js';
 import tokushima_mock_story_yuta_canada from './tokushima_mock_story_yuta_canada.js';
 import tokushima_mock_q7_mie_2024 from './tokushima_mock_q7_mie_2024.js';
+import kisogaku_tokushima_2025_c3_3_4 from './kisogaku_tokushima_2025_c3_3_4.js';
+import kisogaku_tokushima_2025_c3_3_5 from './kisogaku_tokushima_2025_c3_3_5.js';
+import kisogaku_tokushima_2025_c3_3_6 from './kisogaku_tokushima_2025_c3_3_6.js';
+import kisogaku_tokushima_2025_c3_3_7 from './kisogaku_tokushima_2025_c3_3_7.js';
+import kisogaku_tokushima_2025_c3_2_4 from './kisogaku_tokushima_2025_c3_2_4.js';
+import kisogaku_tokushima_2025_c3_2_5 from './kisogaku_tokushima_2025_c3_2_5.js';
+import kisogaku_tokushima_2025_c3_2_6 from './kisogaku_tokushima_2025_c3_2_6.js';
+import kisogaku_tokushima_2025_c3_2_7 from './kisogaku_tokushima_2025_c3_2_7.js';
 
 
 const weddingRegistryProblem = {
@@ -1169,4 +1177,4 @@ Sometimes AI Suitcase can't ( ) the ( ) of a traffic light when the sunlight is 
     }
 };
 
-export const grade3Problems = [weddingRegistryProblem, newYearsResolutionProblem, rinsSpeechProblem, tokushima_mock_d5_aurora, tokushima_mock_2025_yamaguchi_remix, tokushima_2026_mock_q7_cleaning, tokushima_mock_d5_paper_recycling, tokushima_mock_story_yuta_canada, tokushima_mock_q7_mie_2024];
+export const grade3Problems = [weddingRegistryProblem, newYearsResolutionProblem, rinsSpeechProblem, tokushima_mock_d5_aurora, tokushima_mock_2025_yamaguchi_remix, tokushima_2026_mock_q7_cleaning, tokushima_mock_d5_paper_recycling, tokushima_mock_story_yuta_canada, tokushima_mock_q7_mie_2024, kisogaku_tokushima_2025_c3_3_4, kisogaku_tokushima_2025_c3_3_5, kisogaku_tokushima_2025_c3_3_6, kisogaku_tokushima_2025_c3_3_7, kisogaku_tokushima_2025_c3_2_4, kisogaku_tokushima_2025_c3_2_5, kisogaku_tokushima_2025_c3_2_6, kisogaku_tokushima_2025_c3_2_7];
