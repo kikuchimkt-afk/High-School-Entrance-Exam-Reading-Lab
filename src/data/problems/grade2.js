@@ -1313,8 +1313,11 @@ Mr. Hoshi thinks the showcase at his shop is very important because it is like h
     }
 };
 
+import kisogaku_tokushima_2025_c2_8 from './kisogaku_tokushima_2025_c2_8.js';
+
 export const grade2Problems = [
     holidaysProblem,
     morningRoutineProblem,
-    rikaCakeShopProblem
+    rikaCakeShopProblem,
+    kisogaku_tokushima_2025_c2_8
 ];
