@@ -25,7 +25,7 @@ Ken: Because my brother is going to play the guitar. He is in the music club. He
 Liam: Really? I didn't know that. I would like to hear his guitar sound.
 Ken: Me too. <u>② exciting</u> me to see his performance.
 
-[IMAGE:/images/kisogaku_c3_1_5_festival_pamphlet.png|60%]
+[IMAGE:/images/kisogaku_c3_1_5_festival_pamphlet.png|35%]
 
 Liam: What else can we do?
 Ken: We can buy some Japanese food for lunch.
