@@ -191,7 +191,7 @@ const LeftPanel = ({ styles, selectedQuestionId, onSelectQuestion, mode, problem
                                             src={src}
                                             alt="Content illustration"
                                             className={`${styles.contentImage} ${width ? styles.blockImage : ''}`}
-                                            style={width ? { width: width } : {}}
+                                            style={width ? { maxWidth: width } : {}}
                                         />
                                     );
                                 }

@@ -29,7 +29,7 @@ Tae: I see. That makes sense.
 
 Lyla: I also found a list of records of the Northern Lights in old Japanese history books. Please look at this table.
 
-[IMAGE:/assets/images/tokushima_mock_d5_aurora_table.png|100%]
+[IMAGE:/assets/images/tokushima_mock_d5_aurora_table.png|60%]
 
 Tae: Wow, there are two records in 1150. And look at 1370. In that year, the Northern Lights were seen in October and [  B  ].
 

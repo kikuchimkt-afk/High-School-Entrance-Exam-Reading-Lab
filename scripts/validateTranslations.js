@@ -33,8 +33,8 @@ function splitIntoSentences(paragraph) {
     // Ensure sentence split happens even if sentence ends with </u> by adding a space (matches LeftPanel.jsx logic)
     protectedPara = protectedPara.replace(/([.!?])<\/u>/g, '$1 </u>');
 
-    // Split on sentence-ending punctuation (Updated to handle nested quotes correctly)
-    let sentences = protectedPara.match(/[^.!?]+[.!?]+['"]*(\s+|$)/g) || [protectedPara];
+    // Split on sentence-ending punctuation with Unicode quote support
+    let sentences = protectedPara.match(/[^.!?]+[.!?]+['"\u201C\u201D\u2018\u2019]*(\s+|$)/g) || [protectedPara];
 
     // Restore placeholders
     sentences = sentences.map(s => {
@@ -61,6 +61,11 @@ function validateProblem(problem) {
     const paragraphs = problem.content.split(/\n+/).filter(p => p.trim().length > 0);
 
     paragraphs.forEach((paragraph, pIdx) => {
+        // Skip IMAGE tag paragraphs (they don't need translations)
+        if (paragraph.trim().match(/^\[IMAGE:/)) {
+            return;
+        }
+
         const englishSentences = splitIntoSentences(paragraph);
         const translations = problem.sentenceTranslations[pIdx] || [];
 

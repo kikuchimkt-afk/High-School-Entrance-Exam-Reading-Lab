@@ -16,7 +16,7 @@ const tokushima_2025_mock_d5_paper_recycling = {
         "オリジナル問題"
     ],
     instruction: "次の対話は，中学生の美香(Mika)と留学生のデニス(Denis)が，紙の消費とリサイクルについて話しているものです。あとの問いに答えなさい。",
-    content: `[IMAGE:/images/tokushima_mock_paper_recycling_table.png|100%]
+    content: `[IMAGE:/images/tokushima_mock_paper_recycling_table.png|60%]
 
 Denis: Hey, Mika. What are you doing?
 
@@ -108,44 +108,47 @@ Mika: Well, sorry, I don't know much about that yet. I'm going to go to the libr
         }
     ],
     sentenceTranslations: {
-        "0": [
-            "デニス：やあ、美香。何をしているの？"
-        ],
+        "0": [],
         "1": [
-            "美香：スピーチコンテストに向けてトピックについて調べているの。トピックは紙と環境よ。"
+            "デニス：やあ、美香。",
+            "何をしているの？"
         ],
         "2": [
-            "デニス：それは面白そうだね！君のリサーチを見てもいい？"
+            "美香：スピーチコンテストに向けてトピックについて調べているの。",
+            "トピックは紙と環境よ。"
         ],
         "3": [
+            "デニス：それは面白そうだね！",
+            "君のリサーチを見てもいい？"
+        ],
+        "4": [
             "美香：もちろん。",
             "この表は、2022年に世界でどの国が最も紙を消費したかを示しているわ。",
             "中国がトップね。",
             "中国は1億トン以上の紙を消費したのよ。"
         ],
-        "4": [
+        "5": [
             "デニス：僕の国のドイツと日本も、たくさん消費しているね。",
             "あぁ、僕の国はイタリアよりも多くの紙を使ったことがわかるよ。",
             "それは、ドイツがヨーロッパで最も紙を消費したことを意味するね。",
             "その表は他に何を示しているの？"
         ],
-        "5": [
+        "6": [
             "美香：それはリサイクルのために回収された古紙の割合も示しているわ。",
             "韓国が最も高い割合で、見て、ドイツの割合も高かったのよ。"
         ],
-        "6": [
+        "7": [
             "デニス：日本の割合も高かったんだね。",
             "美香、表Bは日本の紙リサイクルについてかい？"
         ],
-        "7": [
+        "8": [
             "美香：ええ、それは、古紙を回収するシステムとリサイクル [ 技術 ] のおかげで、日本がたくさん紙をリサイクルできることを示しているわ。",
             "また、多くの日本人が環境を守ることに [ 関心がある ] から、ここではたくさんの紙がリサイクルされているとも書かれているわ。"
         ],
-        "8": [
-            "デニス：なるほど。",
-            "[ (その技術についてもっと教えてくれませんか？) ]"
-        ],
         "9": [
+            "デニス：なるほど。[ (その技術についてもっと教えてくれませんか？) ]"
+        ],
+        "10": [
             "美香：ええと、ごめんなさい、それについてはまだあまり知らないの。",
             "もっと調べるために図書館へ行くつもりよ。"
         ]
@@ -155,7 +158,7 @@ Mika: Well, sorry, I don't know much about that yet. I'm going to go to the libr
             "correct": "(1) technology\n(2) interested",
             "beginner": {
                 "summary": "文脈から適切な名詞と形容詞を補う問題です。",
-                "detail": "**(1) 文脈の手がかり:** <ref target=\"7-0\">...because of its system... and its recycling [ (1) ].</ref><br>「システム」と並列される要素であり、直後のデニスの質問や美香の「まだよく知らない」という反応から、専門的な「技術 (**technology**)」が入ると推論できます。図表Bの「日本の技術」という項目も大きなヒントになります。<br><br>**(2) 文脈の手がかり:** <ref target=\"7-1\">...many Japanese people are [ (2) ] in protecting...</ref><br>熟語 **be interested in ~**（～に興味がある／関心がある）の形を見抜きます。「環境保護に関心があるからリサイクルが進む」という論理的な文脈が成立します。",
+                "detail": "**(1) 文脈の手がかり:** <ref target=\"8-0\">...because of its system... and its recycling [ (1) ].</ref><br>「システム」と並列される要素であり、直後のデニスの質問や美香の「まだよく知らない」という反応から、専門的な「技術 (**technology**)」が入ると推論できます。図表Bの「日本の技術」という項目も大きなヒントになります。<br><br>**(2) 文脈の手がかり:** <ref target=\"8-1\">...many Japanese people are [ (2) ] in protecting...</ref><br>熟語 **be interested in ~**（～に興味がある／関心がある）の形を見抜きます。「環境保護に関心があるからリサイクルが進む」という論理的な文脈が成立します。",
                 "keywords": [
                     "system (システム・仕組み)",
                     "collect (回収する)",
@@ -191,7 +194,7 @@ Mika: Well, sorry, I don't know much about that yet. I'm going to go to the libr
             "correct": "ウ",
             "beginner": {
                 "summary": "対話の内容と一致する文を選ぶ、情報のスキャニング問題です。",
-                "detail": "<b>ア</b>：表Aについての発言で、1億トン以上消費したのはアメリカではなく「中国 (China)」です。<ref target=\"3-3\">It consumed over one hundred million tons of paper.</ref> の直前で China に言及しています。<br><b>イ</b>：リサイクル率が最も高かったのはドイツではなく「韓国 (Korea)」です。<ref target=\"5-1\">Korea had the highest percentage</ref> とあり、図表でも Z(韓国) が 88% と最高値です。<br><b>ウ</b>：正解。美香は <ref target=\"7-0\">Japan can recycle a lot... because of its system... and its recycling technology.</ref> と述べています。<br><b>エ</b>：美香は <ref target=\"9-0\">I don't know much about that yet.</ref>（まだそれについてはあまり知らない）と言い、図書館へ行くところです。",
+                "detail": "<b>ア</b>：表Aについての発言で、1億トン以上消費したのはアメリカではなく「中国 (China)」です。<ref target=\"4-3\">It consumed over one hundred million tons of paper.</ref> の直前で China に言及しています。<br><b>イ</b>：リサイクル率が最も高かったのはドイツではなく「韓国 (Korea)」です。<ref target=\"6-1\">Korea had the highest percentage</ref> とあり、図表でも Z(韓国) が 88% と最高値です。<br><b>ウ</b>：正解。美香は <ref target=\"8-0\">Japan can recycle a lot... because of its system... and its recycling technology.</ref> と述べています。<br><b>エ</b>：美香は <ref target=\"10-0\">I don't know much about that yet.</ref>（まだそれについてはあまり知らない）と言い、図書館へ行くところです。",
                 "keywords": [
                     "show (示す)",
                     "consume (消費する)",
@@ -226,7 +229,7 @@ Mika: Well, sorry, I don't know much about that yet. I'm going to go to the libr
             "correct": "X ドイツ，Y イタリア，Z 韓国",
             "beginner": {
                 "summary": "表の中の伏せ字（X, Y, Z）を本文の記述から特定する、高度な情報検索問題です。",
-                "detail": "徳島県入試で非常によく出るパターンです。本文中のヒントを一つずつ表と照らし合わせます。<br><br>1. **Xの特定**: デニスが <ref target=\"4-1\">Germany (used more paper than) Italy.</ref> と言い、さらに <ref target=\"4-2\">consumed the most paper in Europe.</ref>（ヨーロッパで最多消費）と言っています。表のX、Y、Zのうち、消費量が最も多いのはX(17,397)なので、**X＝ドイツ**となります。<br>2. **Yの特定**: 上記デニスの発言（ドイツ＞イタリア）から、ドイツ(X)の次に消費量が多い10,646の**Y＝イタリア**となります。<br>3. **Zの特定**: 美香が <ref target=\"5-1\">Korea had the highest percentage</ref>（韓国が最も高い割合）と言っています。回収割合(%)の列で最も高い88%を記録している**Z＝韓国**となります。",
+                "detail": "徳島県入試で非常によく出るパターンです。本文中のヒントを一つずつ表と照らし合わせます。<br><br>1. **Xの特定**: デニスが <ref target=\"5-1\">Germany (used more paper than) Italy.</ref> と言い、さらに <ref target=\"5-2\">consumed the most paper in Europe.</ref>（ヨーロッパで最多消費）と言っています。表のX、Y、Zのうち、消費量が最も多いのはX(17,397)なので、**X＝ドイツ**となります。<br>2. **Yの特定**: 上記デニスの発言（ドイツ＞イタリア）から、ドイツ(X)の次に消費量が多い10,646の**Y＝イタリア**となります。<br>3. **Zの特定**: 美香が <ref target=\"6-1\">Korea had the highest percentage</ref>（韓国が最も高い割合）と言っています。回収割合(%)の列で最も高い88%を記録している**Z＝韓国**となります。",
                 "keywords": [
                     "most (最も多い)",
                     "highest (最も高い)",

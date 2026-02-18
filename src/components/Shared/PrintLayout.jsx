@@ -83,13 +83,13 @@ const PrintLayout = ({ problem }) => {
                             const imageMatch = paragraph.match(/^\[IMAGE:(.+?)(?:\|(.+))?\]$/);
                             if (imageMatch) {
                                 const src = imageMatch[1].trim();
-                                const width = imageMatch[2] ? imageMatch[2].trim() : '100%';
+                                const width = imageMatch[2] ? imageMatch[2].trim() : '80%';
                                 return (
                                     <img
                                         key={idx}
                                         src={src}
                                         className={styles.contentImage}
-                                        style={{ width: width, display: 'block', margin: '1em 0' }}
+                                        style={{ maxWidth: width, width: 'auto', display: 'block', margin: '0.8em auto' }}
                                         alt=""
                                     />
                                 );

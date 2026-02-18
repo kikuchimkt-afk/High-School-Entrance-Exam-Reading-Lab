@@ -18,9 +18,7 @@ const tokushima_2026_mock_q7_cleaning = {
             "Q6: 条件英作文。「掃除」に対する自分の意見と理由を述べる。"
         ]
     },
-    content: `(出典：福島県2025年 (改))
-
-Three months have passed since I came to Japan. My school life here has been great because all my classmates are very kind, and they help me when I have some problems. Before I came here, I was afraid to experience cultural differences. But now I'm learning new things every day, and actually it's a lot of fun. Today, I'd like to talk about one of my new experiences.
+    content: `Three months have passed since I came to Japan. My school life here has been great because all my classmates are very kind, and they help me when I have some problems. Before I came here, I was afraid to experience cultural differences. But now I'm learning new things every day, and actually it's a lot of fun. Today, I'd like to talk about one of my new experiences.
 
 When I first visited the school, I was <u>[ A ]</u> to find that the school buildings were very clean. There was no trash on the floor. The windows were so beautiful like a mirror! My school in my hometown is not so clean because we wear outdoor shoes even in the school building. In Japan, they change from outdoor shoes to indoor shoes when they enter school! I really like the idea. However, that was not the only reason. After classes, all the students moved their desks and chairs, and began to clean the classroom together! I thought, "Why are they cleaning the classroom?" I have never done anything like <u>this</u> before. At first, I didn't feel like joining them. But my classmates helped me with cleaning, so I decided to try it. After we finished cleaning, I felt so good! Soon, I realized that this is a great part of Japanese culture.
 
@@ -28,9 +26,7 @@ What do Japanese people think about cleaning? When I asked my classmates about t
 
 I found a good point about cleaning. I feel really nice to have a clean space and I think a clean classroom helps us study better during classes. Now I love school cleaning time because it is a good time for me to learn the Japanese cleaning culture from my classmates.
 
-I have something I want to try. When I go back to my country, I want to introduce the Japanese cleaning culture to my classmates in my hometown. Then, I would like to begin a school cleaning project and share it with them. I want them to feel happy by cleaning together. And also, I want all of you to be proud of your wonderful culture. Thank you.
-
-(出典：福島県2025年 (改))`,
+I have something I want to try. When I go back to my country, I want to introduce the Japanese cleaning culture to my classmates in my hometown. Then, I would like to begin a school cleaning project and share it with them. I want them to feel happy by cleaning together. And also, I want all of you to be proud of your wonderful culture. Thank you.`,
     questions: [
         {
             id: "q1",
@@ -115,14 +111,14 @@ I have something I want to try. When I go back to my country, I want to introduc
         }
     ],
     sentenceTranslations: {
-        "1": [
+        "0": [
             "日本に来てから3ヶ月が経ちました。",
             "ここでの学校生活は素晴らしいです。なぜならクラスメート全員がとても親切で、私が問題を抱えているときに助けてくれるからです。",
             "ここに来る前は、文化の違いを経験することを恐れていました。",
             "しかし今では毎日新しいことを学んでおり、実際とても楽しいです。",
             "今日は、私の新しい経験の一つについてお話ししたいと思います。"
         ],
-        "2": [
+        "1": [
             "私が初めて学校を訪れたとき、校舎がとても清潔であることに気づき驚きました([ A ])。",
             "床にはゴミ一つありませんでした。",
             "窓は鏡のようにとても美しかったです！",
@@ -138,7 +134,7 @@ I have something I want to try. When I go back to my country, I want to introduc
             "掃除が終わった後、とても良い気分になりました！",
             "すぐに、これが日本文化の素晴らしい部分だと気づきました。"
         ],
-        "3": [
+        "2": [
             "日本人は掃除についてどう考えているのでしょうか？",
             "私がクラスメートにこの質問をしたとき、彼らは異なる答えを持っていました。",
             "しかし多くの生徒は「私たちは毎日教室を使うので、それらを掃除するのは当然だ」と言いました。",
@@ -150,12 +146,12 @@ I have something I want to try. When I go back to my country, I want to introduc
             "私は誰かに「ありがとう」と表現するために掃除をするとは考えたこともありませんでした。",
             "私はその話にとても興味を持ちました。"
         ],
-        "4": [
+        "3": [
             "私は掃除について良い点を見つけました。",
             "きれいな空間(space)があることは本当に気分が良いですし、きれいな教室は授業中私たちがより良く勉強するのを助けてくれると思います。",
             "今では学校の掃除の時間が大好きです。なぜなら私にとってクラスメートから日本の掃除文化を学ぶ良い時間だからです。"
         ],
-        "5": [
+        "4": [
             "私にはやってみたいことがあります。",
             "自分の国に帰ったら、故郷のクラスメートに日本の掃除文化を紹介したいです。",
             "そして、学校掃除プロジェクト(project)を始めて、それを彼らと共有したいです。",

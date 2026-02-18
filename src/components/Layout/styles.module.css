@@ -863,7 +863,8 @@
   display: block;
   float: none !important;
   margin: 1.5rem auto !important;
-  max-width: 100%;
+  max-width: min(100%, 400px);
+  height: auto;
 }
 
 .questionImage {

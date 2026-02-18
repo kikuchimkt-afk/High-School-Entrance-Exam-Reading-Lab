@@ -273,9 +273,9 @@
 /* Image Styles */
 .contentImage {
     display: block;
-    width: 100px;
-    float: right;
-    margin: 0 0 0 8px;
+    max-width: min(100%, 55%);
+    height: auto;
+    margin: 0.5em auto;
     border: 1px solid #ccc;
 }
 
