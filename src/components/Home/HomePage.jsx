@@ -146,7 +146,7 @@ const HomePage = ({
         <div className={styles.homeContainer}>
             <header className={styles.header}>
                 <h1 className={styles.appTitle}>高校受験 リーディング・ラボ</h1>
-                <p className={styles.subTitle}>学習したい問題を選択してください</p>
+                <p className={styles.subTitle}>現在の登録問題数 {mockProblems.length}問！</p>
             </header>
 
             {/* Search Bar */}
